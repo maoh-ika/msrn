@@ -1,0 +1,7 @@
+tools/external
+gbdk-win64/
+rom/
+bin/
+dist/
+venv/
+resource/

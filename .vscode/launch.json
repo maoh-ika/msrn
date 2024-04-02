@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+    
+        {
+            "type": "emulicious-debugger",
+            "request": "launch",
+            "emuliciousPath": "${workspaceFolder}/tools/external/Emulicious-with-Java64",
+            "name": "Launch in Emulicious",
+            "program": "${workspaceFolder}/dist/Debug/msrn.gb",
+            "port": 58870,
+            "stopOnEntry": false,
+            "preLaunchTask": "${defaultBuildTask}"
+        }
+    ]
+}
