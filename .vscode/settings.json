@@ -31,7 +31,9 @@
         "types.h": "c",
         "puzzle.h": "c",
         "puzzle_stage.h": "c",
-        "puzzle_view.h": "c"
+        "puzzle_view.h": "c",
+        "stdlib.h": "c",
+        "time.h": "c"
     },
     "cmake.configureOnOpen": false
 }

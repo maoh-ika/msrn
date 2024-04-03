@@ -25,11 +25,15 @@ void main( void ) {
     SHOW_SPRITES;
 
     BOOLEAN isRunning = TRUE;
+    unsigned long frame = 0;
     while (isRunning) {
-        wait_vbl_done();
-
-        updateView();
+        updateView(frame);
         drawView();
+        wait_vbl_done();
+        ++frame;
+        if (frame == UINT32_MAX) {
+            frame = 0;
+        }
     }
 
 //    CRITICAL {

@@ -8,6 +8,7 @@
 
 #define STAGE_WIDTH 10
 #define STAGE_HEIGHT 9
+#define STAGE_OBJECT_TILES 2
 
 typedef struct stage_object_t {
     unsigned char type;
@@ -16,12 +17,18 @@ typedef struct stage_object_t {
     BOOLEAN isUpdated;
 } StageObject;
 
-extern StageObject stage[];
+extern StageObject gStage[];
 
 void initStage(void);
+void prepareStage(void);
+BOOLEAN isStageReady();
 void drawStage(void);
 
 void getDirectionCandidates(BOOLEAN* up, BOOLEAN* down, BOOLEAN* left, BOOLEAN* right);
 BOOLEAN moveSelectedPiece(void);
+BOOLEAN selectUpPiece(void);
+BOOLEAN selectDownPiece(void);
+BOOLEAN selectLeftPiece(void);
+BOOLEAN selectRightPiece(void);
 
 #endif

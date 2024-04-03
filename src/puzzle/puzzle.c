@@ -1,12 +1,13 @@
 #include <gb/gb.h>
+#include <string.h>
 #include "graphics/puzzle_hi_tileset.h"
 #include "graphics/puzzle_hi_tilemap.h"
 #include "graphics/puzzle_border_tileset.h"
 #include "graphics/puzzle_border_tilemap.h"
 #include "puzzle/puzzle.h"
 
-Piece pieces[PUZZLE_PIECE_COUNT];
-PuzzleState puzzleState = {0};
+Piece gPieces[PUZZLE_PIECE_COUNT];
+PuzzleContext gPuzzleContext = {0};
 
 void shift(unsigned char* out, const unsigned char* in, const int len, const int offset) {
     for (int i = 0; i < len; ++i) {
@@ -15,15 +16,19 @@ void shift(unsigned char* out, const unsigned char* in, const int len, const int
 }
 
 void calcPieceXYPixel(int* x, int* y, const Piece* piece) {
-    *x = piece->x * PIECE_WIDTH + 8;
-    *y = piece->y * PIECE_HEIGHT + 16;
+    *x = piece->x * 16 + 8; // 16 = 8px x [tiles in stage object(=2)]
+    *y = piece->y * 16 + 16;
 }
 
 Piece* getPieceByXY(const unsigned char x, const unsigned char y) {
     for (int i = 0; i < PUZZLE_PIECE_COUNT; ++i) {
-        if (pieces[i].x == x && pieces[i].y == y) {
-            return &pieces[i];
+        if (x < gPieces[i].x || gPieces[i].x + PIECE_WIDTH_OBJECT - 1 < x) {
+            continue;
         }
+        if (y < gPieces[i].y || gPieces[i].y + PIECE_HEIGHT_OBJECT - 1 < y) {
+            continue;
+        }
+        return &gPieces[i];
     }
     return NULL;
 }
@@ -34,86 +39,127 @@ Piece* initPuzzle(
     const int spriteIdOffset,
     const unsigned char startX,
     const unsigned char startY) {
+    
     set_bkg_data(bgTileIdxOffset, PUZZLE_HI_TILESET_TILE_COUNT, PUZZLE_HI_TILESET);
-    set_sprite_data(spriteTileIdxOffset, PUZZLE_BORDER_TILESET_TILE_COUNT, PUZZLE_BORDER_TILESET);
     
     // shift tile refs in tilemap by offset
     unsigned char puzzleTileMap[PUZZLE_HI_TILEMAP_WIDTH * PUZZLE_HI_TILEMAP_HEIGHT];
     shift(puzzleTileMap, PUZZLE_HI_TILEMAP, PUZZLE_HI_TILEMAP_WIDTH * PUZZLE_HI_TILEMAP_HEIGHT, bgTileIdxOffset);
     
-    shift(puzzleState.borderTileIds, PUZZLE_BORDER_TILEMAP, 4, spriteTileIdxOffset);
-
     // init pieces
-    for (int y = 0; y < PUZZLE_HEIGHT; ++y) {
-        for (int x = 0; x < PUZZLE_WIDTH; ++x) {
-            const int pieceIdx = x + y * PUZZLE_WIDTH;
-            pieces[pieceIdx].x = x + startX;
-            pieces[pieceIdx].y = y + startY;
-            const int mapIdxTopLeft = (x << 1) + (y << 1) * PUZZLE_HI_TILEMAP_WIDTH;
-            pieces[pieceIdx].tileIds[0] = puzzleTileMap[mapIdxTopLeft]; // top left
-            pieces[pieceIdx].tileIds[1] = puzzleTileMap[mapIdxTopLeft + 1]; // top right
-            pieces[pieceIdx].tileIds[2] = puzzleTileMap[mapIdxTopLeft + PUZZLE_HI_TILEMAP_WIDTH]; // bottom left
-            pieces[pieceIdx].tileIds[3] = puzzleTileMap[mapIdxTopLeft + PUZZLE_HI_TILEMAP_WIDTH + 1]; // bottom right
+    for (int pieceY = 0; pieceY < PUZZLE_HEIGHT; ++pieceY) {
+        for (int pieceX = 0; pieceX < PUZZLE_WIDTH; ++pieceX) {
+            const int pieceIndex = pieceX + pieceY * PUZZLE_WIDTH;
+            Piece* piece = &gPieces[pieceIndex];
+            // to stage coordinate
+            piece->x = (pieceX * PIECE_WIDTH_OBJECT) + startX;
+            piece->y = (pieceY * PIECE_HEIGHT_OBJECT) + startY;
+            // to tile coordinate
+            const int mapIdxTopLeft = pieceX * PIECE_WIDTH_TILES + pieceY * PIECE_HEIGHT_TILES * PUZZLE_HI_TILEMAP_WIDTH;
+            for (int ty = 0; ty < PIECE_HEIGHT_TILES; ++ty) {
+                for (int tx = 0; tx < PIECE_WIDTH_TILES; ++tx) {
+                    const int tilePos = tx + ty * PIECE_WIDTH_TILES;
+                    const int mapIdx = (tx + ty * PUZZLE_HI_TILEMAP_WIDTH) + mapIdxTopLeft;
+                    piece->tileIndices[tilePos] = puzzleTileMap[mapIdx];
+                }
+            }
+            piece->isUpated = TRUE;
         }
     }
 
-    // init state
-    puzzleState.selectedPiece = &pieces[0];
-    puzzleState.borderObjectIds[0] = spriteIdOffset;
-    puzzleState.borderObjectIds[1] = spriteIdOffset + 1;
-    puzzleState.borderObjectIds[2] = spriteIdOffset + 2;
-    puzzleState.borderObjectIds[3] = spriteIdOffset + 3;
-    
-    set_sprite_tile(puzzleState.borderObjectIds[0], puzzleState.borderTileIds[0]); // top left
-    set_sprite_tile(puzzleState.borderObjectIds[1], puzzleState.borderTileIds[1]); // top right
-    set_sprite_tile(puzzleState.borderObjectIds[2], puzzleState.borderTileIds[2]); // bottom left
-    set_sprite_tile(puzzleState.borderObjectIds[3], puzzleState.borderTileIds[3]); // bottom right
+    // init context
+    for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+        gPuzzleContext.borderObjectIds[i] = spriteIdOffset + i;
+    }
+    for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+        gPuzzleContext.selectedPieceObjectIds[i] = spriteIdOffset + PIECE_TILE_COUNT + i;
+    }
+    gPuzzleContext.bgTileIdxOffset = bgTileIdxOffset;
+    gPuzzleContext.spriteTileIdxOffset = spriteTileIdxOffset;
 
-    return &pieces[0];
+    // load border tiles 
+    set_sprite_data(spriteTileIdxOffset, PUZZLE_BORDER_TILESET_TILE_COUNT, PUZZLE_BORDER_TILESET);
+
+    unsigned char borderTileIndices[PIECE_TILE_COUNT];
+    shift(borderTileIndices, PUZZLE_BORDER_TILEMAP, PIECE_TILE_COUNT, spriteTileIdxOffset);
+    for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+        set_sprite_tile(gPuzzleContext.borderObjectIds[i], borderTileIndices[i]);
+    }
+
+    return &gPieces[0];
 }
 
 void drawPuzzle(void) {
-    // draw pieces
+    Piece* selectedPiece = getSelectedPiece();
+    
+    // draw not selected pieces as background to avoid 40 sprites limit.
     for (int i = 0; i < PUZZLE_PIECE_COUNT; ++i) {
-        Piece* piece = &piece[i];
-        if (pieces->isUpated) {
-            const int xTopLeft = (pieces->x << 1);
-            const int yTopLeft = (piece->y << 1);
-            set_tile_xy(xTopLeft, yTopLeft, piece->tileIds[0]); // top left
-            set_tile_xy(xTopLeft + 1, yTopLeft, piece->tileIds[1]); // top right
-            set_tile_xy(xTopLeft, yTopLeft + 1, pieces->tileIds[2]); // bottom left
-            set_tile_xy(xTopLeft + 1, yTopLeft + 1, pieces->tileIds[3]); // bottom right
+        Piece* piece = &gPieces[i];
+        if (!piece->isUpated) {
+            continue;
+        }
+        // to tile coordinate
+        const int tileXTopLeft = (piece->x * 2);
+        const int tileYTopLeft = (piece->y * 2);
+        for (int ty = 0; ty < PIECE_HEIGHT_TILES; ++ty) {
+            for (int tx = 0; tx < PIECE_WIDTH_TILES; ++tx) {
+                const int idx = tx + ty * PIECE_WIDTH_TILES;
+                set_tile_xy(tx + tileXTopLeft, ty + tileYTopLeft, piece->tileIndices[idx]);
+            }
+        }
+        if (piece == selectedPiece) {
+            // draw selected piece and border as sprite
+            int selectedX;
+            int selectedY;
+            calcPieceXYPixel(&selectedX, &selectedY, selectedPiece);
+            for (int ty = 0; ty < PIECE_HEIGHT_TILES; ++ty) {
+                for (int tx = 0; tx < PIECE_WIDTH_TILES; ++tx) {
+                    const int objIdx = tx + ty * PIECE_WIDTH_TILES;
+                    const int tilePixelX = selectedX + tx * 8;
+                    const int tilePixelY = selectedY + ty * 8;
+                    //move_sprite(gPuzzleContext.selectedPieceObjectIds[objIdx], tilePixelX, tilePixelY);
+                    move_sprite(gPuzzleContext.borderObjectIds[objIdx], tilePixelX, tilePixelY);
+                }
+            }
         }
         piece->isUpated = FALSE;
     }
-
-    // draw selected piece border
-    const Piece* selectedPiece = getSelectedPiece();
-
-    int selectedX;
-    int selectedY;
-    calcPieceXYPixel(&selectedX, &selectedY, selectedPiece);
-    move_sprite(puzzleState.borderObjectIds[0], selectedX, selectedY);
-    move_sprite(puzzleState.borderObjectIds[1], selectedX + 8, selectedY);
-    move_sprite(puzzleState.borderObjectIds[2], selectedX, selectedY + 8);
-    move_sprite(puzzleState.borderObjectIds[3], selectedX + 8, selectedY + 8);
 }
 
 Piece* getSelectedPiece(void) {
-   return puzzleState.selectedPiece;
+   return gPuzzleContext.selectedPiece;
 }
 
-void selectPiece(const unsigned char x, const unsigned char y) {
+BOOLEAN isCompleted(void) {
+}
+
+BOOLEAN selectPiece(const unsigned char x, const unsigned char y) {
     Piece* target = getPieceByXY(x, y);
     if (!target) {
-        return;
-    } 
+        return FALSE;
+    }
+
+    target->isUpated = TRUE;    
+    gPuzzleContext.selectedPiece = target;
+
+    // load piece tiles to sprite memory. overwrite prev piece tiles.
+    unsigned char pieceTiles[16 * PIECE_TILE_COUNT]; 
+    for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+        const int tileIndex = target->tileIndices[i] - gPuzzleContext.bgTileIdxOffset;
+        memcpy(&pieceTiles[i * 16], &PUZZLE_HI_TILESET[tileIndex * 16], 16);
+    }
+    set_sprite_data(gPuzzleContext.spriteTileIdxOffset + PUZZLE_BORDER_TILESET_TILE_COUNT, PIECE_TILE_COUNT, pieceTiles);
+    for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+        set_sprite_tile(gPuzzleContext.selectedPieceObjectIds[i], PUZZLE_BORDER_TILESET_TILE_COUNT + i);
+    }
+
+    return TRUE;
 }
 
 void moveUp(const unsigned char x, const unsigned char y) {
     Piece* piece = getPieceByXY(x, y);
     if (piece != NULL) {
-        --piece->y;
+        piece->y -= PIECE_HEIGHT_OBJECT;
         piece->isUpated = TRUE;
     }
 }
@@ -121,7 +167,7 @@ void moveUp(const unsigned char x, const unsigned char y) {
 void moveDown(const unsigned char x, const unsigned char y) {
     Piece* piece = getPieceByXY(x, y);
     if (piece != NULL) {
-        ++piece->y;
+        piece->y += PIECE_HEIGHT_OBJECT;
         piece->isUpated = TRUE;
     }
 }
@@ -129,7 +175,7 @@ void moveDown(const unsigned char x, const unsigned char y) {
 void moveLeft(const unsigned char x, const unsigned char y) {
     Piece* piece = getPieceByXY(x, y);
     if (piece != NULL) {
-        --piece->x;
+        piece->x -= PIECE_WIDTH_OBJECT;
         piece->isUpated = TRUE;
     }
 }
@@ -137,7 +183,7 @@ void moveLeft(const unsigned char x, const unsigned char y) {
 void moveRight(const unsigned char x, const unsigned char y) {
     Piece* piece = getPieceByXY(x, y);
     if (piece != NULL) {
-        ++piece->x;
+        piece->x += PIECE_WIDTH_OBJECT;
         piece->isUpated = TRUE;
     }
 }
