@@ -19,9 +19,9 @@ typedef struct stage_object_t {
 
 extern StageObject gStage[];
 
-void initStage(void);
+void initStage(const int bgTileIdxOffset);
 void prepareStage(void);
-BOOLEAN isStageReady();
+BOOLEAN isStageReady(void);
 void drawStage(void);
 
 void getDirectionCandidates(BOOLEAN* up, BOOLEAN* down, BOOLEAN* left, BOOLEAN* right);

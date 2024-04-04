@@ -1,19 +1,15 @@
 #include <gb/gb.h>
 #include <string.h>
+#include <stdio.h>
 #include "graphics/puzzle_hi_tileset.h"
 #include "graphics/puzzle_hi_tilemap.h"
 #include "graphics/puzzle_border_tileset.h"
 #include "graphics/puzzle_border_tilemap.h"
 #include "puzzle/puzzle.h"
+#include "util.h"
 
 Piece gPieces[PUZZLE_PIECE_COUNT];
 PuzzleContext gPuzzleContext = {0};
-
-void shift(unsigned char* out, const unsigned char* in, const int len, const int offset) {
-    for (int i = 0; i < len; ++i) {
-        out[i] = in[i] + offset;
-    }
-}
 
 void calcPieceXYPixel(int* x, int* y, const Piece* piece) {
     *x = piece->x * 16 + 8; // 16 = 8px x [tiles in stage object(=2)]
@@ -131,6 +127,21 @@ Piece* getSelectedPiece(void) {
 }
 
 BOOLEAN isCompleted(void) {
+    int expectedX = 0;
+    int expectedY = 0;
+    for (int pieceY = 0; pieceY < PUZZLE_HEIGHT; ++pieceY) {
+        expectedX = gPieces[0].x;
+        expectedY = gPieces[0].y + pieceY * PIECE_HEIGHT_OBJECT;
+        for (int pieceX = 0; pieceX < PUZZLE_WIDTH; ++pieceX) {
+            const int pieceIndex = pieceX + pieceY * PUZZLE_WIDTH;
+            Piece* piece = &gPieces[pieceIndex];
+            if (piece->x != expectedX || piece->y != expectedY) {
+                return FALSE;
+            } 
+            expectedX += PIECE_WIDTH_OBJECT;
+        }
+    }
+    return TRUE;
 }
 
 BOOLEAN selectPiece(const unsigned char x, const unsigned char y) {

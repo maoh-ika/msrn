@@ -33,7 +33,9 @@
         "puzzle_stage.h": "c",
         "puzzle_view.h": "c",
         "stdlib.h": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "util.h": "c",
+        "keyop_tilemap.h": "c"
     },
     "cmake.configureOnOpen": false
 }

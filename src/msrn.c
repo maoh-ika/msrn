@@ -23,6 +23,7 @@ void main( void ) {
     
     SHOW_BKG;
     SHOW_SPRITES;
+    SHOW_WIN;
 
     BOOLEAN isRunning = TRUE;
     unsigned long frame = 0;

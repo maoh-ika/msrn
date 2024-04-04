@@ -2,13 +2,13 @@ import subprocess
 import os
 import cv2
 
-org_img = 'resource/puzzle/border.png'
-out_tileset = 'puzzle_border_tileset'
-out_tilemap = 'puzzle_border_tilemap'
-tileset_name = 'PUZZLE_BORDER_TILESET'
-tilemap_name = 'PUZZLE_BORDER_TILEMAP'
-out_tiles_x = 4
-out_tiles_y = 2
+org_img = 'resource/hud/hud.png'
+out_tileset = 'hud_tileset'
+out_tilemap = 'hud_tilemap'
+tileset_name = 'HUD_TILESET'
+tilemap_name = 'HUD_TILEMAP'
+out_tiles_x = 8
+out_tiles_y = 8
 
 img = cv2.imread(org_img, cv2.IMREAD_GRAYSCALE)
 cv2.imwrite('g.png', img)

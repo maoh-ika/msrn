@@ -4,10 +4,12 @@
 #include "graphics/stage_tilemap.h"
 #include "puzzle/puzzle_stage.h"
 #include "puzzle/puzzle.h"
+#include "util.h"
 
 StageObject gStage[STAGE_WIDTH * STAGE_HEIGHT];
 int gCurrentPitIdx = -1;
 unsigned char gRandomCount = 0;
+unsigned int gBgTileIdxOffset = 0;
 
 #define TILE_INDEX_WALL 0
 #define TILE_INDEX_RESERVED 2
@@ -18,9 +20,28 @@ unsigned char getObjectIdx(const unsigned char x, const unsigned char y) {
     return x + y * STAGE_WIDTH;
 }
 
-void initStage(void) {
-    set_bkg_data(0, STAGE_TILESET_TILE_COUNT, STAGE_TILESET);
-    set_bkg_tiles(0, 0, STAGE_TILEMAP_WIDTH, STAGE_TILEMAP_HEIGHT, STAGE_TILEMAP);
+void random(void) {
+    BOOLEAN (*funcs[])(void) = {selectUpPiece, selectDownPiece, selectLeftPiece, selectRightPiece};
+    for (int i = 3; i > 0; --i) {
+        const int j = rand() % (i + 1);
+        BOOLEAN (*temp)(void) = funcs[i];
+        funcs[i] = funcs[j];
+        funcs[j] = temp;
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        if ((*funcs[i])()) {
+            moveSelectedPiece();
+            break;
+        }
+    }
+}
+
+void initStage(const int bgTileIdxOffset) {
+    set_bkg_data(bgTileIdxOffset, STAGE_TILESET_TILE_COUNT, STAGE_TILESET);
+    unsigned char stagemap[STAGE_TILEMAP_WIDTH * STAGE_TILEMAP_HEIGHT];
+    shift(stagemap, STAGE_TILEMAP, STAGE_TILEMAP_WIDTH * STAGE_TILEMAP_HEIGHT, bgTileIdxOffset);
+    set_bkg_tiles(0, 0, STAGE_TILEMAP_WIDTH, STAGE_TILEMAP_HEIGHT, stagemap);
 
     unsigned char pieceStartX = 255;
     unsigned char pieceStartY = 255;
@@ -52,9 +73,10 @@ void initStage(void) {
         }
     }
     
-    initPuzzle(STAGE_TILESET_TILE_COUNT, 0, 0, pieceStartX, pieceStartY);
+    initPuzzle(STAGE_TILESET_TILE_COUNT + bgTileIdxOffset, 0, 0, pieceStartX, pieceStartY);
     selectDownPiece();
     gRandomCount = 0;
+    gBgTileIdxOffset = bgTileIdxOffset;
 }
 
 void prepareStage(void) {
@@ -65,7 +87,7 @@ void prepareStage(void) {
     ++gRandomCount;
 }
 
-BOOLEAN isStageReady() {
+BOOLEAN isStageReady(void) {
     return gRandomCount >= 200;
 }
 
@@ -75,7 +97,7 @@ void drawStage(void) {
         if (obj->isUpdated) {
             const int xTopLeft = (obj->x << 1);
             const int yTopLeft = (obj->y << 1);
-            const int tileIndex = obj->type == STAGE_OBJECT_PIT ? TILE_INDEX_PIT : TILE_INDEX_RESERVED;
+            const int tileIndex = (obj->type == STAGE_OBJECT_PIT ? TILE_INDEX_PIT : TILE_INDEX_RESERVED) + gBgTileIdxOffset;
             set_tile_xy(xTopLeft, yTopLeft,  tileIndex); // top left
             set_tile_xy(xTopLeft + 1, yTopLeft, tileIndex); // top right
             set_tile_xy(xTopLeft, yTopLeft + 1, tileIndex); // bottom left
@@ -181,21 +203,4 @@ BOOLEAN selectLeftPiece(void) {
 BOOLEAN selectRightPiece(void) {
     StageObject* pit = &gStage[gCurrentPitIdx];
     return selectPiece(pit->x + PIECE_WIDTH_OBJECT, pit->y);
-}
-
-void random() {
-    BOOLEAN (*funcs[])(void) = {selectUpPiece, selectDownPiece, selectLeftPiece, selectRightPiece};
-    for (int i = 3; i > 0; --i) {
-        const int j = rand() % (i + 1);
-        BOOLEAN (*temp)(void) = funcs[i];
-        funcs[i] = funcs[j];
-        funcs[j] = temp;
-    }
-
-    for (int i = 0; i < 4; ++i) {
-        if ((*funcs[i])()) {
-            moveSelectedPiece();
-            break;
-        }
-    }
 }
