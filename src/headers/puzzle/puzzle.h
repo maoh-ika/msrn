@@ -12,6 +12,11 @@
 #define PIECE_WIDTH_OBJECT 2
 #define PIECE_HEIGHT_OBJECT 1
 
+#define PUZZLE_ID_HI 0
+#define PUZZLE_ID_MASHI 1
+#define PUZZLE_ID_IIKOCHAN 2
+#define PUZZLE_ID_NICE 3
+
 typedef struct piece_t {
     unsigned char x; // in puzzle coordinate
     unsigned char y; // in puzzle coordinate
@@ -23,13 +28,8 @@ typedef struct puzzle_context_t {
     Piece* selectedPiece;
     unsigned char borderTileIndices[PIECE_TILE_COUNT];
     unsigned char borderObjectIds[PIECE_TILE_COUNT];
-    unsigned char selectedPieceObjectIds[PIECE_TILE_COUNT];
     int bgTileIdxOffset;
-    int spriteTileIdxOffset;
 } PuzzleContext;
-
-extern Piece gPieces[];
-extern PuzzleContext gPuzzleContext;
 
 Piece* initPuzzle(
     const int bgTileIdxOffset,
@@ -39,9 +39,11 @@ Piece* initPuzzle(
     const unsigned char startY);
 
 void drawPuzzle(void);
+void finalizePuzzle(void);
 
 Piece* getSelectedPiece(void);
 BOOLEAN isCompleted(void);
+void setPuzzleId(const unsigned char id);
 
 BOOLEAN selectPiece(const unsigned char x, const unsigned char y);
 void moveUp(const unsigned char x, const unsigned char y);

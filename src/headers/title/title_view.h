@@ -5,5 +5,6 @@
 void initTitleView(void);
 int updateTitleView(void);
 void drawTitleView(void);
+void finalizeTitleView(void);
 
 #endif

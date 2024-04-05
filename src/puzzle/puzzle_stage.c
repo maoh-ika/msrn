@@ -90,7 +90,11 @@ void prepareStage(void) {
 }
 
 BOOLEAN isStageReady(void) {
-    return gRandomCount >= 200;
+    return gRandomCount >= 1;
+}
+
+void finalizeStage(void) {
+    finalizePuzzle();
 }
 
 void drawStage(void) {

@@ -3,7 +3,7 @@
 #include "title/title_view.h"
 #include "graphics/title_tileset.h"
 #include "graphics/title_tilemap.h"
-#include "graphics/keyop_tilemap.h"
+#include "graphics/puzzle_keyop_tilemap.h"
 #include "graphics/hud_tileset.h"
 #include "graphics/hud_tilemap.h"
 #include "view.h"
@@ -11,21 +11,13 @@
 
 #define CURSOR_STATE_START 0
 #define CURSOR_STATE_GALLERY 1
-unsigned char gCursorState = CURSOR_STATE_START;
-BOOLEAN gCursorUpdated = FALSE;
-
-void cursorScreenXY(int* x, int* y) {
-    if (gCursorState == CURSOR_STATE_START) {
-        *x = 50;
-        *y = 113;
-    } else if (gCursorState == CURSOR_STATE_GALLERY) {
-        *x = 50;
-        *y = 123;
-    }
-    toScreenXY(x, y);
-}
+static unsigned char gCursorState = CURSOR_STATE_START;
+static BOOLEAN gCursorUpdated = FALSE;
 
 void initTitleView(void) {
+    HIDE_BKG;
+    HIDE_SPRITES;
+
     set_bkg_data(0, TITLE_TILESET_TILE_COUNT, TITLE_TILESET);
     set_bkg_tiles(0, 0, TITLE_TILEMAP_WIDTH, TITLE_TILEMAP_HEIGHT, TITLE_TILEMAP);
     
@@ -33,6 +25,9 @@ void initTitleView(void) {
     set_sprite_tile(0, 0x26);
     gCursorState = CURSOR_STATE_START;
     gCursorUpdated = TRUE;
+
+    SHOW_BKG; 
+    SHOW_SPRITES;
 }
 
 int updateTitleView(void) {
@@ -40,7 +35,9 @@ int updateTitleView(void) {
     if (padInput & J_A || padInput & J_START) {
         waitpadup();
         if (gCursorState == CURSOR_STATE_START) {
-            return VIEW_ID_PUZZLE;
+            return VIEW_ID_STAGE_SELECT;
+        } else if (gCursorState == CURSOR_STATE_GALLERY) {
+            return VIEW_ID_GALLERY;
         }
     } else if (padInput & J_UP) {
         waitpadup();
@@ -55,9 +52,13 @@ int updateTitleView(void) {
 
 void drawTitleView(void) {
     if (gCursorUpdated) {
-        int x = 0;
-        int y = 0;
-        cursorScreenXY(&x, &y);
+        int x = 50;
+        int y = 113 + 12 * gCursorState;
+        toScreenXY(&x, &y);
         move_sprite(0, x, y);
     }
+}
+
+void finalizeTitleView(void) {
+    hide_sprite(0);
 }

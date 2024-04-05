@@ -4,7 +4,7 @@
 #define _HUD_TILESET_H
 
 extern const UINT8 HUD_TILESET[];
-#define HUD_TILESET_TILE_COUNT 42
+#define HUD_TILESET_TILE_COUNT 43
 
 
 #endif

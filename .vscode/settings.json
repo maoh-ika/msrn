@@ -35,7 +35,10 @@
         "stdlib.h": "c",
         "time.h": "c",
         "util.h": "c",
-        "keyop_tilemap.h": "c"
+        "keyop_tilemap.h": "c",
+        "hud_tilemap.h": "c",
+        "title_view.h": "c",
+        "stage_select_view.h": "c"
     },
     "cmake.configureOnOpen": false
 }

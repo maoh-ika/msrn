@@ -10,7 +10,9 @@
 #include "graphics/puzzle_hi_tileset.h"
 #include "graphics/puzzle_hi_tilemap.h"
 #include "title/title_view.h"
+#include "stage_select/stage_select_view.h"
 #include "puzzle/puzzle_view.h"
+#include "gallery/gallery_view.h"
 #include "view.h"
 
 #define MAIN_STATE_VIEW_CHANGED 0
@@ -19,14 +21,14 @@
 void main( void ) {
     HIDE_BKG;
 
-    void (*initViewFuncs[])(void) = { initTitleView, initPuzzleView };
-    int (*updateViewFuncs[])(void) = { updateTitleView, updatePuzzleView };
-    void (*drawViewFuncs[])(void) = { drawTitleView, drawPuzzleView };
+    void (*initViewFuncs[])(void) = { initTitleView, initStageSelectView, initPuzzleView, initGalleryView };
+    int (*updateViewFuncs[])(void) = { updateTitleView, updateStageSelectView, updatePuzzleView, updateGalleryView };
+    void (*drawViewFuncs[])(void) = { drawTitleView, drawStageSelectView, drawPuzzleView, drawGalleryView };
+    void (*finalizeViewFuncs[])(void) = { finalizeTitleView, finalizeStageSelectView, finalizePuzzleView, finalizeGalleryView };
     unsigned char currentViewIid = VIEW_ID_TITLE;
     unsigned char mainState = MAIN_STATE_VIEW_CHANGED;
     
     SHOW_BKG;
-    SHOW_SPRITES;
 
     BOOLEAN isRunning = TRUE;
     
@@ -37,6 +39,7 @@ void main( void ) {
         } else if (mainState == MAIN_STATE_VIEW_ACTIVE) {
             const int newxView = updateViewFuncs[currentViewIid]();
             if (newxView != currentViewIid) {
+                finalizeViewFuncs[currentViewIid]();
                 currentViewIid = newxView;
                 mainState = MAIN_STATE_VIEW_CHANGED;
             } else {

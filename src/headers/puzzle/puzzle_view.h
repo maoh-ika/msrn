@@ -5,5 +5,6 @@
 void initPuzzleView(void);
 int updatePuzzleView(void);
 void drawPuzzleView(void);
+void finalizePuzzleView(void);
 
 #endif
