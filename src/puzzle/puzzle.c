@@ -12,8 +12,9 @@ Piece gPieces[PUZZLE_PIECE_COUNT];
 PuzzleContext gPuzzleContext = {0};
 
 void calcPieceXYPixel(int* x, int* y, const Piece* piece) {
-    *x = piece->x * 16 + 8; // 16 = 8px x [tiles in stage object(=2)]
-    *y = piece->y * 16 + 16;
+    *x = piece->x * 16; // 16 = 8px x [tiles in stage object(=2)]
+    *y = piece->y * 16;
+    toScreenXY(x, y);
 }
 
 Piece* getPieceByXY(const unsigned char x, const unsigned char y) {

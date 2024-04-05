@@ -1,5 +1,6 @@
 #include <gb/gb.h>
 #include <rand.h>
+#include <time.h>
 #include "graphics/stage_tileset.h"
 #include "graphics/stage_tilemap.h"
 #include "puzzle/puzzle_stage.h"
@@ -77,6 +78,7 @@ void initStage(const int bgTileIdxOffset) {
     selectDownPiece();
     gRandomCount = 0;
     gBgTileIdxOffset = bgTileIdxOffset;
+    initrand(time(NULL));
 }
 
 void prepareStage(void) {

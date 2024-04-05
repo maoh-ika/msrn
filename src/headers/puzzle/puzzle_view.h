@@ -1,8 +1,9 @@
 #ifndef INCLUDED_PUZZLE_VIEW_H
 #define INCLUDED_PUZZLE_VIEW_H
 
-void initView(void);
-void updateView(const unsigned int frame);
-void drawView(void);
+// common view interface
+void initPuzzleView(void);
+int updatePuzzleView(void);
+void drawPuzzleView(void);
 
 #endif

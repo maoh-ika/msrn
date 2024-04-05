@@ -9,36 +9,40 @@
 #include "graphics/stage_tilemap.h"
 #include "graphics/puzzle_hi_tileset.h"
 #include "graphics/puzzle_hi_tilemap.h"
-#include "puzzle/puzzle.h"
-#include "puzzle/puzzle_stage.h"
+#include "title/title_view.h"
 #include "puzzle/puzzle_view.h"
+#include "view.h"
+
+#define MAIN_STATE_VIEW_CHANGED 0
+#define MAIN_STATE_VIEW_ACTIVE 1
 
 void main( void ) {
-//    printf( "Hello World!" );
     HIDE_BKG;
-//    set_bkg_data(0, 228, TITLE_TILESET);
-//    set_bkg_tiles(0, 0, TITLE_TILEMAP_WIDTH, TITLE_TILEMAP_HEIGHT, TITLE_TILEMAP);
 
-    initView();
+    void (*initViewFuncs[])(void) = { initTitleView, initPuzzleView };
+    int (*updateViewFuncs[])(void) = { updateTitleView, updatePuzzleView };
+    void (*drawViewFuncs[])(void) = { drawTitleView, drawPuzzleView };
+    unsigned char currentViewIid = VIEW_ID_TITLE;
+    unsigned char mainState = MAIN_STATE_VIEW_CHANGED;
     
     SHOW_BKG;
     SHOW_SPRITES;
-    SHOW_WIN;
 
     BOOLEAN isRunning = TRUE;
-    unsigned long frame = 0;
+    
     while (isRunning) {
-        updateView(frame);
-        drawView();
-        wait_vbl_done();
-        ++frame;
-        if (frame == UINT32_MAX) {
-            frame = 0;
+        if (mainState == MAIN_STATE_VIEW_CHANGED) {
+            initViewFuncs[currentViewIid]();
+            mainState = MAIN_STATE_VIEW_ACTIVE;
+        } else if (mainState == MAIN_STATE_VIEW_ACTIVE) {
+            const int newxView = updateViewFuncs[currentViewIid]();
+            if (newxView != currentViewIid) {
+                currentViewIid = newxView;
+                mainState = MAIN_STATE_VIEW_CHANGED;
+            } else {
+                drawViewFuncs[currentViewIid]();
+            }
         }
+        wait_vbl_done();
     }
-
-//    CRITICAL {
-//        add_SIO(nowait_int_handler);
-//    }
-//    set_interrupts(SIO_IFLAG);
 }

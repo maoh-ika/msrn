@@ -4,7 +4,7 @@
 #define _TITLE_TILESET_H
 
 extern const UINT8 TITLE_TILESET[];
-#define TITLE_TILESET_TILE_COUNT 228
+#define TITLE_TILESET_TILE_COUNT 178
 
 
 #endif

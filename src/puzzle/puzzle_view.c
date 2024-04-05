@@ -4,6 +4,8 @@
 #include "puzzle/puzzle_stage.h"
 #include "graphics/hud_tileset.h"
 #include "graphics/keyop_tilemap.h"
+#include "view.h"
+#include "util.h"
 
 #define PUZZLE_VIEW_STATE_SHUTDOWN 0
 #define PUZZLE_VIEW_STATE_PREVIEW 1
@@ -14,16 +16,9 @@
 unsigned char gViewState = PUZZLE_VIEW_STATE_SHUTDOWN;
 unsigned char gPreviewFrameCount = 0;
 
-void hideWindow() {
-    while(STAT_REG & 3); // wait for HBlank
-    HIDE_WIN;
-}
-
-void showWindow() {
-    SHOW_WIN;
-}
-
-void initView(void) {
+void initPuzzleView(void) {
+    HIDE_BKG;
+    
     if (gViewState != PUZZLE_VIEW_STATE_SHUTDOWN) {
         return;
     }
@@ -40,18 +35,19 @@ void initView(void) {
     set_interrupts(VBL_IFLAG | LCD_IFLAG);
     set_win_tiles(0, 0, KEYOP_TILEMAP_WIDTH, KEYOP_TILEMAP_HEIGHT, KEYOP_TILEMAP);
     move_win(7, 0);
+    
+    SHOW_BKG;
 
     gViewState = PUZZLE_VIEW_STATE_PREVIEW;
 }
 
-void updateView(const unsigned int frame) {
+int updatePuzzleView() {
     if (gViewState == PUZZLE_VIEW_STATE_PREVIEW) {
         if (gPreviewFrameCount < 180) {
             ++gPreviewFrameCount;
         } else {
             gViewState = PUZZLE_VIEW_STATE_PREPARING;
         }
-        return;
     } else if (gViewState == PUZZLE_VIEW_STATE_PREPARING) {
         if (!isStageReady()) {
             prepareStage();
@@ -61,23 +57,30 @@ void updateView(const unsigned int frame) {
     } else if (gViewState == PUZZLE_VIEW_STATE_PLAYING) {
         unsigned char padInput = joypad();
 
-        if (padInput & J_A && frame % 7 == 0) {
-            BOOLEAN up, down, left, right;
-            getDirectionCandidates(&up, &down, &left, &right);
+        if (padInput & J_A || padInput & J_START) {
+            waitpadup();
             moveSelectedPiece();
+            if (isCompleted()) {
+                return VIEW_ID_TITLE;
+            }
         } else if (padInput & J_UP) {
+            waitpadup();
             selectUpPiece();
         } else if (padInput & J_DOWN) {
+            waitpadup();
             selectDownPiece();
         } else if (padInput & J_LEFT) {
+            waitpadup();
             selectLeftPiece();
         } else if (padInput & J_RIGHT) {
+            waitpadup();
             selectRightPiece();
         }
     }
 
+    return VIEW_ID_PUZZLE;
 }
 
-void drawView(void) {
+void drawPuzzleView(void) {
     drawStage();
 }
