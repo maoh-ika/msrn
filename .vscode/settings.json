@@ -39,7 +39,8 @@
         "hud_tilemap.h": "c",
         "title_view.h": "c",
         "stage_select_view.h": "c",
-        "puzzle_mashi_tilemap.h": "c"
+        "puzzle_mashi_tilemap.h": "c",
+        "platform.h": "c"
     },
     "cmake.configureOnOpen": false
 }

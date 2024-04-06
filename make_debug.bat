@@ -24,7 +24,7 @@ FOR /R "src/" %%X IN (*.c) DO (
 )
 
 :: Compile a .gb file from the compiled .o files
-%LCC_COMPILE_BASE% -Wm-yC -Wl-yt3 -debug -o dist/Debug/msrn.gb !COMPILE_OBJECT_FILES!
+%LCC_COMPILE_BASE% -Wm-yC -Wl-yt3 -autobank -debug -o dist/Debug/msrn.gb !COMPILE_OBJECT_FILES!
 
 endlocal
 

@@ -19,8 +19,6 @@
 #define MAIN_STATE_VIEW_ACTIVE 1
 
 void main( void ) {
-    HIDE_BKG;
-
     void (*initViewFuncs[])(void) = { initTitleView, initStageSelectView, initPuzzleView, initGalleryView };
     int (*updateViewFuncs[])(void) = { updateTitleView, updateStageSelectView, updatePuzzleView, updateGalleryView };
     void (*drawViewFuncs[])(void) = { drawTitleView, drawStageSelectView, drawPuzzleView, drawGalleryView };
@@ -28,9 +26,10 @@ void main( void ) {
     unsigned char currentViewIid = VIEW_ID_TITLE;
     unsigned char mainState = MAIN_STATE_VIEW_CHANGED;
     
-    SHOW_BKG;
+    ENABLE_RAM;
 
     BOOLEAN isRunning = TRUE;
+
     
     while (isRunning) {
         if (mainState == MAIN_STATE_VIEW_CHANGED) {

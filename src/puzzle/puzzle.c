@@ -1,4 +1,5 @@
 #include <gb/gb.h>
+#include <gbdk/platform.h>
 #include <string.h>
 #include <stdio.h>
 #include "graphics/puzzle_hi_tileset.h"
@@ -40,10 +41,12 @@ void getPuzzleTileData(
     const unsigned char** tilemap
 ) {
         if (gCurrentPuzzleId == PUZZLE_ID_HI) {
+            SWITCH_ROM(BANK(PUZZLE_HI_TILESET));
             *tileset = PUZZLE_HI_TILESET;
             *tilesetCount = PUZZLE_HI_TILESET_TILE_COUNT;
             *tilemap = PUZZLE_HI_TILEMAP;
         } else if (gCurrentPuzzleId == PUZZLE_ID_MASHI) {
+            SWITCH_ROM(BANK(PUZZLE_MASHI_TILESET));
             *tileset = PUZZLE_MASHI_TILESET;
             *tilesetCount = PUZZLE_MASHI_TILESET_TILE_COUNT;
             *tilemap = PUZZLE_MASHI_TILEMAP;

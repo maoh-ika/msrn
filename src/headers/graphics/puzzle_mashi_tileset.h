@@ -3,8 +3,11 @@
 #ifndef _PUZZLE_MASHI_TILESET_H
 #define _PUZZLE_MASHI_TILESET_H
 
+#include <gbdk/platform.h>
+
 extern const UINT8 PUZZLE_MASHI_TILESET[];
 #define PUZZLE_MASHI_TILESET_TILE_COUNT 184
 
+BANKREF_EXTERN(PUZZLE_MASHI_TILESET)
 
 #endif

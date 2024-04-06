@@ -3,8 +3,11 @@
 #ifndef _PUZZLE_HI_TILESET_H
 #define _PUZZLE_HI_TILESET_H
 
+#include <gbdk/platform.h>
+
 extern const UINT8 PUZZLE_HI_TILESET[];
 #define PUZZLE_HI_TILESET_TILE_COUNT 191
 
+BANKREF_EXTERN(PUZZLE_HI_TILESET)
 
 #endif
