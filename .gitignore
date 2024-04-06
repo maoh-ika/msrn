@@ -4,4 +4,4 @@ rom/
 bin/
 dist/Debug
 venv/
-resource/
+resource/dev
