@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include "graphics/puzzle_hi_tileset.h"
 #include "graphics/puzzle_hi_tilemap.h"
+#include "graphics/puzzle_mashi_tileset.h"
+#include "graphics/puzzle_mashi_tilemap.h"
 #include "graphics/puzzle_border_tileset.h"
 #include "graphics/puzzle_border_tilemap.h"
 #include "puzzle/puzzle.h"
@@ -41,6 +43,10 @@ void getPuzzleTileData(
             *tileset = PUZZLE_HI_TILESET;
             *tilesetCount = PUZZLE_HI_TILESET_TILE_COUNT;
             *tilemap = PUZZLE_HI_TILEMAP;
+        } else if (gCurrentPuzzleId == PUZZLE_ID_MASHI) {
+            *tileset = PUZZLE_MASHI_TILESET;
+            *tilesetCount = PUZZLE_MASHI_TILESET_TILE_COUNT;
+            *tilemap = PUZZLE_MASHI_TILEMAP;
         }
 }
 

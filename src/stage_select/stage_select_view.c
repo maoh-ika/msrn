@@ -13,7 +13,7 @@
 #define CURSOR_STATE_IIKOCHAN 2
 #define CURSOR_STATE_NICE 3
 
-static unsigned char gCursorState = CURSOR_STATE_HI;
+static unsigned char gCursorState = PUZZLE_ID_HI;
 static BOOLEAN gCursorUpdated = FALSE;
 
 void initStageSelectView(void) {
@@ -25,7 +25,7 @@ void initStageSelectView(void) {
     
     set_sprite_data(0, HUD_TILESET_TILE_COUNT, HUD_TILESET);
     set_sprite_tile(0, 0x26);
-    gCursorState = CURSOR_STATE_HI;
+    gCursorState = PUZZLE_ID_HI;
     gCursorUpdated = TRUE;
 
     SHOW_BKG;
@@ -36,15 +36,16 @@ int updateStageSelectView(void) {
     unsigned char padInput = joypad();
     if (padInput & J_A || padInput & J_START) {
         waitpadup();
+        setPuzzleId(gCursorState);
         return VIEW_ID_PUZZLE;
     } else if (padInput & J_UP) {
         waitpadup();
-        if (gCursorState > CURSOR_STATE_HI) {
+        if (gCursorState > PUZZLE_ID_HI) {
             --gCursorState;
         }
     } else if (padInput & J_DOWN) {
         waitpadup();
-        if (gCursorState < CURSOR_STATE_NICE) {
+        if (gCursorState < PUZZLE_ID_NICE) {
             ++gCursorState;
         }
     }

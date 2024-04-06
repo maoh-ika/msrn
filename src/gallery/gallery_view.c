@@ -80,10 +80,19 @@ void drawGalleryView(void) {
     if (gViewState == GALLERY_VIEW_STATE_IMG) {
         set_win_tiles(0, 0, GALLERY_KEYOP_TILEMAP_WIDTH, 1, &GALLERY_KEYOP_TILEMAP[gViewState * 16]);
         if (gCurrentImg == GARRALERY_IMG_HI) {
-            tileLen = 8;
-            unsigned char tiles[8] = {0x27, 0x29, 0x16, 0x1B, 0x1A, 0x17, 0x29, 0x26};
+            tileLen = 6;
+            unsigned char tiles[6] = {0x27, 0x29, 0x11, 0x12, 0x29, 0x26};
             memcpy(tileIndices, tiles, tileLen);
 
+            setPuzzleId(PUZZLE_ID_HI);
+            initPuzzle(HUD_TILESET_TILE_COUNT, tileLen, tileLen, 1, 2);
+            drawPuzzle();
+        } else if (gCurrentImg == GARRALERY_IMG_MASHI) {
+            tileLen = 9;
+            unsigned char tiles[9] = {0x27, 0x29, 0x16, 0x0A, 0x1B, 0x11, 0x12, 0x29, 0x26};
+            memcpy(tileIndices, tiles, tileLen);
+
+            setPuzzleId(PUZZLE_ID_MASHI);
             initPuzzle(HUD_TILESET_TILE_COUNT, tileLen, tileLen, 1, 2);
             drawPuzzle();
         }

@@ -2,13 +2,13 @@ import subprocess
 import os
 import cv2
 
-org_img = 'resource/hud/hud.png'
-out_tileset = 'hud_tileset'
-out_tilemap = 'hud_tilemap'
-tileset_name = 'HUD_TILESET'
-tilemap_name = 'HUD_TILEMAP'
-out_tiles_x = 8
-out_tiles_y = 8
+org_img = 'C:/work/retro-game-tcg/resource/puzzle/mashi_8xg.png'
+out_tileset = 'puzzle_mashi_tileset'
+out_tilemap = 'puzzle_mashi_tilemap'
+tileset_name = 'PUZZLE_MASHI_TILESET'
+tilemap_name = 'PUZZLE_MASHII_TILEMAP'
+out_tiles_x = 16
+out_tiles_y = 14
 
 img = cv2.imread(org_img, cv2.IMREAD_GRAYSCALE)
 cv2.imwrite('g.png', img)

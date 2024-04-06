@@ -16,6 +16,7 @@
 #define PUZZLE_ID_MASHI 1
 #define PUZZLE_ID_IIKOCHAN 2
 #define PUZZLE_ID_NICE 3
+#define PUZZLE_ID_MOEGI 4
 
 typedef struct piece_t {
     unsigned char x; // in puzzle coordinate
