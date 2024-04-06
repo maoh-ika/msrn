@@ -24,6 +24,7 @@ void prepareStage(void);
 BOOLEAN isStageReady(void);
 void drawStage(void);
 void finalizeStage(void);
+void correctStage(void);
 
 void getDirectionCandidates(BOOLEAN* up, BOOLEAN* down, BOOLEAN* left, BOOLEAN* right);
 BOOLEAN moveSelectedPiece(void);

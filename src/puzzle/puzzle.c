@@ -14,11 +14,15 @@
 #include "graphics/puzzle_moegi_tilemap.h"
 #include "graphics/puzzle_border_tileset.h"
 #include "graphics/puzzle_border_tilemap.h"
+#include "graphics/puzzle_stripes_tileset.h"
+#include "graphics/puzzle_stripes_tilemap.h"
 #include "puzzle/puzzle.h"
 #include "util.h"
 
 Piece gPieces[PUZZLE_PIECE_COUNT];
 PuzzleContext gPuzzleContext = {0};
+
+unsigned long gClearFlags = 0;
 
 unsigned char gCurrentPuzzleId = PUZZLE_ID_HI;
 
@@ -80,7 +84,8 @@ Piece* initPuzzle(
     const int spriteIdOffset,
     const unsigned char startX,
     const unsigned char startY,
-    BOOLEAN showBorder) {
+    BOOLEAN borderEnabled
+) {
 
     unsigned char* puzzleTileset;
     int puzzleTileCount;
@@ -103,6 +108,8 @@ Piece* initPuzzle(
             // to stage coordinate
             piece->x = (pieceX * PIECE_WIDTH_OBJECT) + startX;
             piece->y = (pieceY * PIECE_HEIGHT_OBJECT) + startY;
+            piece->pieceX = pieceX;
+            piece->pieceY = pieceY;
             // to tile coordinate
             const int mapIdxTopLeft = pieceX * PIECE_WIDTH_TILES + pieceY * PIECE_HEIGHT_TILES * puzzleTilemapWidth;
             for (int ty = 0; ty < PIECE_HEIGHT_TILES; ++ty) {
@@ -116,14 +123,13 @@ Piece* initPuzzle(
         }
     }
 
-    // init context
-    for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
-        gPuzzleContext.borderObjectIds[i] = spriteIdOffset + i;
-    }
     gPuzzleContext.bgTileIdxOffset = bgTileIdxOffset;
 
     // load border tiles
-    if (showBorder) {
+    if (borderEnabled) {
+        for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+            gPuzzleContext.borderObjectIds[i] = spriteIdOffset + i;
+        }
         set_sprite_data(spriteTileIdxOffset, PUZZLE_BORDER_TILESET_TILE_COUNT, PUZZLE_BORDER_TILESET);
 
         unsigned char borderTileIndices[PIECE_TILE_COUNT];
@@ -132,9 +138,26 @@ Piece* initPuzzle(
             set_sprite_tile(gPuzzleContext.borderObjectIds[i], borderTileIndices[i]);
         }
     }
+    
+    // load stripes tiles
+    if (borderEnabled) {
+        for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+            gPuzzleContext.stripesObjectIds[i] = spriteIdOffset + PIECE_TILE_COUNT + i;
+        }
+        set_sprite_data(spriteTileIdxOffset + PUZZLE_BORDER_TILESET_TILE_COUNT, PUZZLE_STRIPES_TILESET_TILE_COUNT, PUZZLE_STRIPES_TILESET);
 
-    gPuzzleContext.showBorder = showBorder;
-    gPuzzleContext.selectedPiece = NULL;
+        unsigned char stripeTileIndices[PIECE_TILE_COUNT];
+        shift(stripeTileIndices, PUZZLE_STRIPES_TILEMAP, PIECE_TILE_COUNT, spriteTileIdxOffset + PUZZLE_BORDER_TILESET_TILE_COUNT);
+        for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+            set_sprite_tile(gPuzzleContext.stripesObjectIds[i], stripeTileIndices[i]);
+        }
+    }
+
+    gPuzzleContext.borderEnabled = borderEnabled;
+    gPuzzleContext.showAnswer = FALSE;
+    gPuzzleContext.selectedPieceIdx = -1;
+    gPuzzleContext.startX = startX;
+    gPuzzleContext.startY = startY;
 
     return &gPieces[0];
 }
@@ -157,7 +180,7 @@ void drawPuzzle(void) {
                 set_tile_xy(tx + tileXTopLeft, ty + tileYTopLeft, piece->tileIndices[idx]);
             }
         }
-        if (piece == selectedPiece && gPuzzleContext.showBorder) {
+        if (piece == selectedPiece && gPuzzleContext.borderEnabled) {
             // draw selected piece and border as sprite
             int selectedX;
             int selectedY;
@@ -170,6 +193,28 @@ void drawPuzzle(void) {
                     move_sprite(gPuzzleContext.borderObjectIds[objIdx], tilePixelX, tilePixelY);
                 }
             }
+            if (gPuzzleContext.showAnswer) {
+                // pieceX and pieceY stores original position on puzzle
+                const int answerPieceIdx = selectedPiece->pieceX + selectedPiece->pieceY * PUZZLE_WIDTH;
+                //const Piece* answerPiece = &gPieces[answerPieceIdx];
+                unsigned char stageX = (selectedPiece->pieceX * PIECE_WIDTH_OBJECT) + gPuzzleContext.startX;
+                unsigned char stageY = (selectedPiece->pieceY * PIECE_HEIGHT_OBJECT) + gPuzzleContext.startY;
+                int screenX = stageX * 16;
+                int screenY = stageY * 16;
+                toScreenXY(&screenX, &screenY);
+                for (int ty = 0; ty < PIECE_HEIGHT_TILES; ++ty) {
+                    for (int tx = 0; tx < PIECE_WIDTH_TILES; ++tx) {
+                        const int objIdx = tx + ty * PIECE_WIDTH_TILES;
+                        const int tilePixelX = screenX + tx * 8;
+                        const int tilePixelY = screenY + ty * 8;
+                        move_sprite(gPuzzleContext.stripesObjectIds[objIdx], tilePixelX, tilePixelY);
+                    }
+                }
+            } else {
+                for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+                    hide_sprite(gPuzzleContext.stripesObjectIds[i]);
+                }
+            }
         }
         piece->isUpated = FALSE;
     }
@@ -178,11 +223,12 @@ void drawPuzzle(void) {
 void finalizePuzzle(void) {
     for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
         hide_sprite(gPuzzleContext.borderObjectIds[i]);
+        hide_sprite(gPuzzleContext.stripesObjectIds[i]);
     }
 }
 
 Piece* getSelectedPiece(void) {
-   return gPuzzleContext.selectedPiece;
+   return gPuzzleContext.selectedPieceIdx == -1 ? NULL : &gPieces[gPuzzleContext.selectedPieceIdx];
 }
 
 BOOLEAN isCompleted(void) {
@@ -207,6 +253,41 @@ void setPuzzleId(const unsigned char id) {
     gCurrentPuzzleId = id;
 }
 
+unsigned char getPuzzleId(void) {
+    return gCurrentPuzzleId;
+}
+
+void showAnswer(BOOLEAN show) {
+    if (gPuzzleContext.showAnswer != show) {
+        gPuzzleContext.showAnswer = show;
+        getSelectedPiece()->isUpated = TRUE;
+    }
+}
+
+BOOLEAN moveToAnswer(const int pieceIdx) {
+    Piece* piece = &gPieces[pieceIdx];
+    const int ansX = (piece->pieceX * PIECE_WIDTH_OBJECT) + gPuzzleContext.startX;
+    const int ansY = (piece->pieceY * PIECE_HEIGHT_OBJECT) + gPuzzleContext.startY;
+    if (ansX != piece->x || ansY != piece->y) {
+        piece->x = ansX;
+        piece->y = ansY;
+        piece->isUpated = TRUE;
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+BOOLEAN isMoegiEnabled(void) {
+    unsigned int mask = (
+        (1 << PUZZLE_ID_HI) |
+        (1 << PUZZLE_ID_MASHI) |
+        (1 << PUZZLE_ID_IIKOCHAN) |
+        (1 << PUZZLE_ID_NICE)
+    );
+    return (gClearFlags & mask) == mask;
+}
+
 BOOLEAN selectPiece(const unsigned char x, const unsigned char y) {
     Piece* target = getPieceByXY(x, y);
     if (!target) {
@@ -214,7 +295,7 @@ BOOLEAN selectPiece(const unsigned char x, const unsigned char y) {
     }
 
     target->isUpated = TRUE;    
-    gPuzzleContext.selectedPiece = target;
+    gPuzzleContext.selectedPieceIdx = target->pieceX + target->pieceY * PUZZLE_WIDTH;
     return TRUE;
 }
 

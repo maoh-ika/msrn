@@ -23,6 +23,13 @@ void initStageSelectView(void) {
     set_bkg_data(0, HUD_TILESET_TILE_COUNT, HUD_TILESET);
     set_bkg_tiles(0, 0, STAGE_SELECT_TILEMAP_WIDTH, STAGE_SELECT_TILEMAP_HEIGHT, STAGE_SELECT_TILEMAP);
     
+    if (isMoegiEnabled()) {
+        unsigned char moegiTiles[5] = { 0x16, 0x00, 0x0E, 0x10, 0x12 };
+        for (int i = 0; i < 5; ++i) {
+            set_tile_xy(7 + i, 10, moegiTiles[i]);
+        }
+    }
+     
     set_sprite_data(0, HUD_TILESET_TILE_COUNT, HUD_TILESET);
     set_sprite_tile(0, 0x26);
     gCursorState = PUZZLE_ID_HI;
@@ -48,7 +55,9 @@ int updateStageSelectView(void) {
         }
     } else if (padInput & J_DOWN) {
         waitpadup();
-        if (gCursorState < PUZZLE_ID_MOEGI) {
+        if (isMoegiEnabled() && gCursorState < PUZZLE_ID_MOEGI) {
+            ++gCursorState;
+        } else if (gCursorState < PUZZLE_ID_NICE) {
             ++gCursorState;
         }
     }

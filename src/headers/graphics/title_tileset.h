@@ -3,8 +3,11 @@
 #ifndef _TITLE_TILESET_H
 #define _TITLE_TILESET_H
 
+#include <gbdk/platform.h>
+
 extern const UINT8 TITLE_TILESET[];
 #define TITLE_TILESET_TILE_COUNT 178
 
+BANKREF_EXTERN(TITLE_TILESET)
 
 #endif

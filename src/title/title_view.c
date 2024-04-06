@@ -1,4 +1,5 @@
 #include <gb/gb.h>
+#include <gbdk/platform.h>
 #include <stdio.h>
 #include "title/title_view.h"
 #include "graphics/title_tileset.h"
@@ -18,6 +19,7 @@ void initTitleView(void) {
     HIDE_BKG;
     HIDE_SPRITES;
 
+    SWITCH_ROM(BANK(TITLE_TILESET));
     set_bkg_data(0, TITLE_TILESET_TILE_COUNT, TITLE_TILESET);
     set_bkg_tiles(0, 0, TITLE_TILEMAP_WIDTH, TITLE_TILEMAP_HEIGHT, TITLE_TILEMAP);
     

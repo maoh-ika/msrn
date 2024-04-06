@@ -1,6 +1,5 @@
 #include <gb/gb.h>
-#include <stdint.h>
-#include <stdio.h>
+#include <string.h>
 #include <types.h>
 
 #include "graphics/title_tileset.h"
@@ -12,6 +11,7 @@
 #include "title/title_view.h"
 #include "stage_select/stage_select_view.h"
 #include "puzzle/puzzle_view.h"
+#include "puzzle/puzzle.h"
 #include "gallery/gallery_view.h"
 #include "view.h"
 
@@ -26,11 +26,8 @@ void main( void ) {
     unsigned char currentViewIid = VIEW_ID_TITLE;
     unsigned char mainState = MAIN_STATE_VIEW_CHANGED;
     
-    ENABLE_RAM;
-
     BOOLEAN isRunning = TRUE;
 
-    
     while (isRunning) {
         if (mainState == MAIN_STATE_VIEW_CHANGED) {
             initViewFuncs[currentViewIid]();

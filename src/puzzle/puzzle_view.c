@@ -1,5 +1,6 @@
 #include <gb/gb.h>
 #include <stdio.h>
+#include <string.h>
 #include "puzzle/puzzle_view.h"
 #include "puzzle/puzzle_stage.h"
 #include "graphics/hud_tileset.h"
@@ -12,8 +13,9 @@
 #define PUZZLE_VIEW_STATE_PREVIEW 0
 #define PUZZLE_VIEW_STATE_PREPARING 1
 #define PUZZLE_VIEW_STATE_PLAYING 2
-#define PUZZLE_VIEW_STATE_CLEAR 3
-#define PUZZLE_VIEW_STATE_COMPLETED 4
+#define PUZZLE_VIEW_STATE_GIVEUP 3
+#define PUZZLE_VIEW_STATE_CLEAR 4
+#define PUZZLE_VIEW_STATE_COMPLETED 5
 
 unsigned char gViewState = PUZZLE_VIEW_STATE_COMPLETED;
 
@@ -56,16 +58,28 @@ int updatePuzzleView(void) {
         }
     } else if (gViewState == PUZZLE_VIEW_STATE_PLAYING) {
         unsigned char padInput = joypad();
+        
+        if (!(padInput & J_B)) {
+            showAnswer(FALSE);
+        }
 
         if (padInput & J_A || padInput & J_START) {
-            waitpadup();
-            moveSelectedPiece();
-            if (isCompleted()) {
-                finalizeStage();
-                remove_LCD(hideWindow);
-                remove_VBL(showWindow);
-                gViewState = PUZZLE_VIEW_STATE_CLEAR;
+            if (padInput & J_B) {
+                // both a and b are pressed
+                waitpadup();
+                gViewState = PUZZLE_VIEW_STATE_GIVEUP;
+            } else {
+                waitpadup();
+                moveSelectedPiece();
+                if (isCompleted()) {
+                    finalizeStage();
+                    remove_LCD(hideWindow);
+                    remove_VBL(showWindow);
+                    gViewState = PUZZLE_VIEW_STATE_CLEAR;
+                }
             }
+        } else if (padInput & J_B) {
+            showAnswer(TRUE);
         } else if (padInput & J_UP) {
             waitpadup();
             selectUpPiece();
@@ -79,7 +93,16 @@ int updatePuzzleView(void) {
             waitpadup();
             selectRightPiece();
         }
+    } else if (gViewState == PUZZLE_VIEW_STATE_GIVEUP) {
+        correctStage();
+        if (isCompleted()) {
+            finalizeStage();
+            remove_LCD(hideWindow);
+            remove_VBL(showWindow);
+            gViewState = PUZZLE_VIEW_STATE_CLEAR;
+        }
     } else if (gViewState == PUZZLE_VIEW_STATE_CLEAR) {
+        gClearFlags |= (1 << getPuzzleId());
         gViewState = PUZZLE_VIEW_STATE_COMPLETED;
     } else if (gViewState == PUZZLE_VIEW_STATE_COMPLETED) {
         unsigned char padInput = joypad();
@@ -92,7 +115,7 @@ int updatePuzzleView(void) {
 }
 
 void drawPuzzleView(void) {
-    if (gViewState <= PUZZLE_VIEW_STATE_PLAYING) {
+    if (gViewState <= PUZZLE_VIEW_STATE_GIVEUP) {
         drawStage();
     } else if (gViewState == PUZZLE_VIEW_STATE_CLEAR) {
         set_bkg_tiles(0, 0, STAGE_CLEAR_TILEMAP_WIDTH, STAGE_CLEAR_TILEMAP_HEIGHT, STAGE_CLEAR_TILEMAP);
