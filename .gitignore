@@ -2,6 +2,6 @@ tools/external
 gbdk-win64/
 rom/
 bin/
-dist/
+dist/Debug
 venv/
 resource/
