@@ -16,7 +16,6 @@
 #define PUZZLE_VIEW_STATE_COMPLETED 4
 
 unsigned char gViewState = PUZZLE_VIEW_STATE_COMPLETED;
-unsigned char gPreviewFrameCount = 0;
 
 void initPuzzleView(void) {
     HIDE_SPRITES;
@@ -36,8 +35,6 @@ void initPuzzleView(void) {
     set_win_tiles(0, 0, PUZZLE_KEYOP_TILEMAP_WIDTH, PUZZLE_KEYOP_TILEMAP_HEIGHT, PUZZLE_KEYOP_TILEMAP);
     move_win(7, 0);
 
-    gPreviewFrameCount = 0;
-    
     SHOW_BKG;
     SHOW_SPRITES;
 
@@ -46,9 +43,9 @@ void initPuzzleView(void) {
 
 int updatePuzzleView(void) {
     if (gViewState == PUZZLE_VIEW_STATE_PREVIEW) {
-        if (gPreviewFrameCount < 180) {
-            ++gPreviewFrameCount;
-        } else {
+        unsigned char padInput = joypad();
+        if (padInput & J_A || padInput & J_START) {
+            waitpadup();
             gViewState = PUZZLE_VIEW_STATE_PREPARING;
         }
     } else if (gViewState == PUZZLE_VIEW_STATE_PREPARING) {

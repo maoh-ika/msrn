@@ -6,6 +6,12 @@
 #include "graphics/puzzle_hi_tilemap.h"
 #include "graphics/puzzle_mashi_tileset.h"
 #include "graphics/puzzle_mashi_tilemap.h"
+#include "graphics/puzzle_iikochan_tileset.h"
+#include "graphics/puzzle_iikochan_tilemap.h"
+#include "graphics/puzzle_nice_tileset.h"
+#include "graphics/puzzle_nice_tilemap.h"
+#include "graphics/puzzle_moegi_tileset.h"
+#include "graphics/puzzle_moegi_tilemap.h"
 #include "graphics/puzzle_border_tileset.h"
 #include "graphics/puzzle_border_tilemap.h"
 #include "puzzle/puzzle.h"
@@ -40,17 +46,32 @@ void getPuzzleTileData(
     int* tilesetCount,
     const unsigned char** tilemap
 ) {
-        if (gCurrentPuzzleId == PUZZLE_ID_HI) {
-            SWITCH_ROM(BANK(PUZZLE_HI_TILESET));
-            *tileset = PUZZLE_HI_TILESET;
-            *tilesetCount = PUZZLE_HI_TILESET_TILE_COUNT;
-            *tilemap = PUZZLE_HI_TILEMAP;
-        } else if (gCurrentPuzzleId == PUZZLE_ID_MASHI) {
-            SWITCH_ROM(BANK(PUZZLE_MASHI_TILESET));
-            *tileset = PUZZLE_MASHI_TILESET;
-            *tilesetCount = PUZZLE_MASHI_TILESET_TILE_COUNT;
-            *tilemap = PUZZLE_MASHI_TILEMAP;
-        }
+    if (gCurrentPuzzleId == PUZZLE_ID_HI) {
+        SWITCH_ROM(BANK(PUZZLE_HI_TILESET));
+        *tileset = PUZZLE_HI_TILESET;
+        *tilesetCount = PUZZLE_HI_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_HI_TILEMAP;
+    } else if (gCurrentPuzzleId == PUZZLE_ID_MASHI) {
+        SWITCH_ROM(BANK(PUZZLE_MASHI_TILESET));
+        *tileset = PUZZLE_MASHI_TILESET;
+        *tilesetCount = PUZZLE_MASHI_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_MASHI_TILEMAP;
+    } else if (gCurrentPuzzleId == PUZZLE_ID_IIKOCHAN) {
+        SWITCH_ROM(BANK(PUZZLE_IIKOCHAN_TILESET));
+        *tileset = PUZZLE_IIKOCHAN_TILESET;
+        *tilesetCount = PUZZLE_IIKOCHAN_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_IIKOCHAN_TILEMAP;
+    } else if (gCurrentPuzzleId == PUZZLE_ID_NICE) {
+        SWITCH_ROM(BANK(PUZZLE_NICE_TILESET));
+        *tileset = PUZZLE_NICE_TILESET;
+        *tilesetCount = PUZZLE_NICE_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_NICE_TILEMAP;
+    } else if (gCurrentPuzzleId == PUZZLE_ID_MOEGI) {
+        SWITCH_ROM(BANK(PUZZLE_MOEGI_TILESET));
+        *tileset = PUZZLE_MOEGI_TILESET;
+        *tilesetCount = PUZZLE_MOEGI_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_MOEGI_TILEMAP;
+    }
 }
 
 Piece* initPuzzle(
@@ -58,7 +79,8 @@ Piece* initPuzzle(
     const int spriteTileIdxOffset,
     const int spriteIdOffset,
     const unsigned char startX,
-    const unsigned char startY) {
+    const unsigned char startY,
+    BOOLEAN showBorder) {
 
     unsigned char* puzzleTileset;
     int puzzleTileCount;
@@ -100,15 +122,18 @@ Piece* initPuzzle(
     }
     gPuzzleContext.bgTileIdxOffset = bgTileIdxOffset;
 
-    // load border tiles 
-    set_sprite_data(spriteTileIdxOffset, PUZZLE_BORDER_TILESET_TILE_COUNT, PUZZLE_BORDER_TILESET);
+    // load border tiles
+    if (showBorder) {
+        set_sprite_data(spriteTileIdxOffset, PUZZLE_BORDER_TILESET_TILE_COUNT, PUZZLE_BORDER_TILESET);
 
-    unsigned char borderTileIndices[PIECE_TILE_COUNT];
-    shift(borderTileIndices, PUZZLE_BORDER_TILEMAP, PIECE_TILE_COUNT, spriteTileIdxOffset);
-    for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
-        set_sprite_tile(gPuzzleContext.borderObjectIds[i], borderTileIndices[i]);
+        unsigned char borderTileIndices[PIECE_TILE_COUNT];
+        shift(borderTileIndices, PUZZLE_BORDER_TILEMAP, PIECE_TILE_COUNT, spriteTileIdxOffset);
+        for (int i = 0; i < PIECE_TILE_COUNT; ++i) {
+            set_sprite_tile(gPuzzleContext.borderObjectIds[i], borderTileIndices[i]);
+        }
     }
 
+    gPuzzleContext.showBorder = showBorder;
     gPuzzleContext.selectedPiece = NULL;
 
     return &gPieces[0];
@@ -132,7 +157,7 @@ void drawPuzzle(void) {
                 set_tile_xy(tx + tileXTopLeft, ty + tileYTopLeft, piece->tileIndices[idx]);
             }
         }
-        if (piece == selectedPiece) {
+        if (piece == selectedPiece && gPuzzleContext.showBorder) {
             // draw selected piece and border as sprite
             int selectedX;
             int selectedY;

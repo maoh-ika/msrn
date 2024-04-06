@@ -74,7 +74,7 @@ void initStage(const int bgTileIdxOffset) {
         }
     }
     
-    initPuzzle(STAGE_TILESET_TILE_COUNT + bgTileIdxOffset, 0, 0, pieceStartX, pieceStartY);
+    initPuzzle(STAGE_TILESET_TILE_COUNT + bgTileIdxOffset, 0, 0, pieceStartX, pieceStartY, TRUE);
     selectDownPiece();
     gRandomCount = 0;
     gBgTileIdxOffset = bgTileIdxOffset;

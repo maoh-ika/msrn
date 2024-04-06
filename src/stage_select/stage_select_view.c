@@ -38,6 +38,9 @@ int updateStageSelectView(void) {
         waitpadup();
         setPuzzleId(gCursorState);
         return VIEW_ID_PUZZLE;
+    } else if (padInput & J_B) {
+        waitpadup();
+        return VIEW_ID_TITLE;
     } else if (padInput & J_UP) {
         waitpadup();
         if (gCursorState > PUZZLE_ID_HI) {
@@ -45,7 +48,7 @@ int updateStageSelectView(void) {
         }
     } else if (padInput & J_DOWN) {
         waitpadup();
-        if (gCursorState < PUZZLE_ID_NICE) {
+        if (gCursorState < PUZZLE_ID_MOEGI) {
             ++gCursorState;
         }
     }

@@ -2,11 +2,11 @@ import subprocess
 import os
 import cv2
 
-org_img = 'C:/work/retro-game-tcg/resource/puzzle/mashi_8xg.png'
-out_tileset = 'puzzle_mashi_tileset'
-out_tilemap = 'puzzle_mashi_tilemap'
-tileset_name = 'PUZZLE_MASHI_TILESET'
-tilemap_name = 'PUZZLE_MASHI_TILEMAP'
+org_img = 'C:/work/retro-game-tcg/resource/puzzle/moegi_8xg.png'
+out_tileset = 'puzzle_moegi_tileset'
+out_tilemap = 'puzzle_moegi_tilemap'
+tileset_name = 'PUZZLE_MOEGI_TILESET'
+tilemap_name = 'PUZZLE_MOEGI_TILEMAP'
 out_tiles_x = 16
 out_tiles_y = 14
 

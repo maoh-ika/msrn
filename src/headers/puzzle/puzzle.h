@@ -26,10 +26,11 @@ typedef struct piece_t {
 } Piece;
 
 typedef struct puzzle_context_t {
-    Piece* selectedPiece;
+    Piece* selectedPieceIdx;
     unsigned char borderTileIndices[PIECE_TILE_COUNT];
     unsigned char borderObjectIds[PIECE_TILE_COUNT];
     int bgTileIdxOffset;
+    BOOLEAN showBorder;
 } PuzzleContext;
 
 Piece* initPuzzle(
@@ -37,7 +38,8 @@ Piece* initPuzzle(
     const int spriteTileIdxOffset,
     const int spriteIdOffset,
     const unsigned char startX, // top left in stage xy coordinate
-    const unsigned char startY);
+    const unsigned char startY,
+    BOOLEAN showBorder);
 
 void drawPuzzle(void);
 void finalizePuzzle(void);
