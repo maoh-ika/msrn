@@ -30,16 +30,16 @@ Area                       Addr        Size        Decimal Bytes (Attributes)
      00000007  l__HEADER |    00000008  l__HEADER |    0000000C  l__GSINIT
      00000030  l__HEADER |    00000039  l__INITIA |    00000039  l__INITIA
      0000005C  l__HEADER |    000000AF  l__HEADER |    000001EB  l__HOME  
-     00000200  s__CODE   |    000002F0  l__DATA   |    00000AA0  l__CODE_2
-     00002000  _rROMB0   |    00002B4A  l__CODE   |    00002D4A  s__HOME  
-     00002F35  s__BASE   |    00002F35  s__CODE_0 |    00002F35  s__INITIA
-     00002F35  s__LIT    |    00002F6E  s__GSINIT |    00002F7A  s__GSFINA
-     00003000  _rROMB1   |    00003B90  l__CODE_1 |    00004000  _rRAMB   
+     00000200  s__CODE   |    00000310  l__DATA   |    00000AA0  l__CODE_2
+     00002000  _rROMB0   |    00002F3D  l__CODE   |    00003000  _rROMB1  
+     0000313D  s__HOME   |    00003328  s__BASE   |    00003328  s__CODE_0
+     00003328  s__INITIA |    00003328  s__LIT    |    00003361  s__GSINIT
+     0000336D  s__GSFINA |    00003B90  l__CODE_1 |    00004000  _rRAMB   
      00008000  __VRAM    |    00008000  __VRAM800 |    00008800  __VRAM880
      00009000  __VRAM900 |    00009800  __SCRN0   |    00009C00  __SCRN1  
      0000A000  __SRAM    |    0000C000  __RAM     |    0000C000  _shadow_O
-     0000C0A0  s__DATA   |    0000C390  s__BSS    |    0000C390  s__INITIA
-     0000C3C9  s__HEAP   |    0000C3C9  s__HEAP_E |    0000D000  __RAMBANK
+     0000C0A0  s__DATA   |    0000C3B0  s__BSS    |    0000C3B0  s__INITIA
+     0000C3E9  s__HEAP   |    0000C3E9  s__HEAP_E |    0000D000  __RAMBANK
      0000E000  .STACK    |    0000FE00  __OAMRAM  |    0000FF00  _P1_REG  
      0000FF00  __IO      |    0000FF01  _SB_REG   |    0000FF02  _SC_REG  
      0000FF04  _DIV_REG  |    0000FF05  _TIMA_REG |    0000FF06  _TMA_REG 
@@ -77,43 +77,46 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_CODE                  00000200    00002B4A =       11082. bytes (REL,CON)
+_CODE                  00000200    00002F3D =       12093. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00000200  _initTitl |    0000025B  _updateTi |    0000029B  _drawTitl
-     000002DE  _finalize |    000002E4  _initStag |    00000377  _updateSt
-     000003D2  _drawStag |    00000412  _finalize |    00000413  _initPuzz
-     00000475  _updatePu |    000005B2  _drawPuzz |    000005D8  _finalize
-     000005D9  _getObjec |    000005E1  _random   |    000006B3  _initStag
-     00000890  _prepareS |    0000089D  _isStageR |    000008A8  _finalize
-     000008AB  _correctS |    000008C4  _drawStag |    00000990  _getDirec
-     00000AC5  _moveSele |    00000BBF  _selectUp |    00000BDE  _selectDo
-     00000BFD  _selectLe |    00000C1D  _selectRi |    00000C3D  _calcPiec
-     00000C91  _getPiece |    00000D1A  _getPuzzl |    00000E16  _initPuzz
-     00001226  _drawPuzz |    00001578  _finalize |    000015A8  _getSelec
-     000015C6  _isComple |    00001695  _setPuzzl |    00001699  _getPuzzl
-     0000169D  _showAnsw |    000016B0  _moveToAn |    00001740  _isMoegiE
-     00001756  _selectPi |    0000177E  _moveUp   |    00001791  _moveDown
-     000017A4  _moveLeft |    000017B5  _moveRigh |    000017C6  _TITLE_TI
-     0000192E  _STAGE_TI |    0000199E  _STAGE_TI |    00001B06  _STAGE_SE
-     00001C5A  _STAGE_CL |    00001DC2  _PUZZLE_S |    00001E22  _PUZZLE_S
-     00001E2A  _PUZZLE_N |    00001F0A  _PUZZLE_M |    00001FEA  _PUZZLE_M
-     000020CA  _PUZZLE_K |    000020F2  _PUZZLE_I |    000021D2  _PUZZLE_H
-     000022B2  _PUZZLE_B |    00002302  _PUZZLE_B |    0000230A  _HUD_TILE
-     000025BA  _HUD_TILE |    000025FA  _GALLERY_ |    0000260E  _initGall
-     0000265F  _nameTile |    00002673  _updateGa |    000026E5  _drawGall
-     00002A17  _finalize |    00002A42  _shift    |    00002A8F  _toScreen
-     00002AC5  _hideWind |    00002AD2  _showWind |    00002AD9  _main    
-     00002BE3  _time     |    00002BF5  _set_vram |    00002BFE  _set_win_
-     00002C06  _set_bkg_ |    00002C30  ___memcpy |    00002C30  _memcpy  
-     00002C62  __divsuch |    00002C68  __modsuch |    00002C71  __divusch
-     00002C7A  __modusch |    00002C87  __divscha |    00002C8C  __modscha
-     00002C93  __divsint |    00002C9C  __modsint |    00002CA8  __divucha
-     00002CAD  __moducha |    00002CB4  __divuint |    00002CBD  __moduint
-     00002CC9  .div8     |    00002CC9  .mod8     |    00002CD1  .div16   
-     00002CD1  .mod16    |    00002D07  .divu8    |    00002D07  .modu8   
-     00002D0A  .divu16   |    00002D0A  .modu16  
+     00000200  _initTitl |    0000025B  _updateTi |    000002C4  _drawTitl
+     00000307  _finalize |    0000030D  _initStag |    000003A0  _updateSt
+     00000433  _drawStag |    00000473  _finalize |    00000474  _menuSele
+     00000487  _menuMove |    0000049A  _menuCanc |    000004AE  _clearCh1
+     000004BE  _updateSo |    0000056E  _initSoun |    000005B9  _setSound
+     00000762  _offSound |    00000765  _initPuzz |    000007C7  _updatePu
+     00000968  _drawPuzz |    0000098E  _finalize |    0000098F  _getObjec
+     00000997  _random   |    00000A69  _initStag |    00000C46  _prepareS
+     00000C53  _isStageR |    00000C5E  _finalize |    00000C61  _correctS
+     00000C7A  _drawStag |    00000D46  _getDirec |    00000E7B  _moveSele
+     00000F75  _selectUp |    00000F94  _selectDo |    00000FB3  _selectLe
+     00000FD3  _selectRi |    00000FF3  _calcPiec |    00001047  _getPiece
+     000010D0  _getPuzzl |    000011CC  _initPuzz |    000015DC  _drawPuzz
+     0000192E  _finalize |    0000195E  _getSelec |    0000197C  _isComple
+     00001A4B  _setPuzzl |    00001A4F  _getPuzzl |    00001A53  _showAnsw
+     00001A66  _moveToAn |    00001AF6  _isMoegiE |    00001B0C  _selectPi
+     00001B34  _moveUp   |    00001B47  _moveDown |    00001B5A  _moveLeft
+     00001B6B  _moveRigh |    00001B7C  _TITLE_TI |    00001CE4  _STAGE_TI
+     00001D54  _STAGE_TI |    00001EBC  _STAGE_SE |    00002010  _STAGE_CL
+     00002178  _PUZZLE_S |    000021D8  _PUZZLE_S |    000021E0  _PUZZLE_N
+     000022C0  _PUZZLE_M |    000023A0  _PUZZLE_M |    00002480  _PUZZLE_K
+     000024A8  _PUZZLE_I |    00002588  _PUZZLE_H |    00002668  _PUZZLE_B
+     000026B8  _PUZZLE_B |    000026C0  _HUD_TILE |    00002970  _HUD_TILE
+     000029B0  _GALLERY_ |    000029C4  _initGall |    00002A40  _nameTile
+     00002A54  _updateGa |    00002AD5  _drawGall |    00002E07  _finalize
+     00002E32  _shift    |    00002E7F  _toScreen |    00002EB5  _hideWind
+     00002EC2  _showWind |    00002EC9  _main     |    00002FD6  _time    
+     00002FE8  _set_vram |    00002FF1  _set_win_ |    00002FF9  _set_bkg_
+     00003023  ___memcpy |    00003023  _memcpy   |    00003055  __divsuch
+     0000305B  __modsuch |    00003064  __divusch |    0000306D  __modusch
+     0000307A  __divscha |    0000307F  __modscha |    00003086  __divsint
+     0000308F  __modsint |    0000309B  __divucha |    000030A0  __moducha
+     000030A7  __divuint |    000030B0  __moduint |    000030BC  .div8    
+     000030BC  .mod8     |    000030C4  .div16    |    000030C4  .mod16   
+     000030FA  .divu8    |    000030FA  .modu8    |    000030FD  .divu16  
+     000030FD  .modu16  
 ASxxxx Linker V03.00/V05.40 + sdld,  page 4.
 Hexadecimal  [32-Bits]
 
@@ -291,26 +294,26 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_HOME                  00002D4A    000001EB =         491. bytes (REL,CON)
+_HOME                  0000313D    000001EB =         491. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00002D4A  .memset_s |    00002D53  .memcpy_s |    00002D70  .display_
-     00002D70  _display_ |    00002D88  _rand     |    00002D88  _randw   
-     00002DB3  _initrand |    00002DB5  .initrand |    00002DBE  _set_win_
-     00002DD2  _set_tile |    00002DD7  _set_bkg_ |    00002DD7  _set_win_
-     00002DDF  _set_spri |    00002E3E  .add_LCD  |    00002E3E  _add_LCD 
-     00002E44  .remove_L |    00002E44  _remove_L |    00002E4A  .padup   
-     00002E4A  _waitpadu |    00002E5A  .jpad     |    00002E5A  _joypad  
-     00002E82  _waitpad  |    00002E83  .wait_pad |    00002E8A  ___sdcc_c
-     00002E8B  _memset   |    00002EBE  _clock    |    00002EC7  _set_bkg_
-     00002EDB  .set_xy_w |    00002EE4  .set_xy_b |    00002EF3  .set_xy_t
+     0000313D  .memset_s |    00003146  .memcpy_s |    00003163  .display_
+     00003163  _display_ |    0000317B  _rand     |    0000317B  _randw   
+     000031A6  _initrand |    000031A8  .initrand |    000031B1  _set_win_
+     000031C5  _set_tile |    000031CA  _set_bkg_ |    000031CA  _set_win_
+     000031D2  _set_spri |    00003231  .add_LCD  |    00003231  _add_LCD 
+     00003237  .remove_L |    00003237  _remove_L |    0000323D  .padup   
+     0000323D  _waitpadu |    0000324D  .jpad     |    0000324D  _joypad  
+     00003275  _waitpad  |    00003276  .wait_pad |    0000327D  ___sdcc_c
+     0000327E  _memset   |    000032B1  _clock    |    000032BA  _set_bkg_
+     000032CE  .set_xy_w |    000032D7  .set_xy_b |    000032E6  .set_xy_t
 ASxxxx Linker V03.00/V05.40 + sdld,  page 23.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_INITIALIZER           00002F35    00000039 =          57. bytes (REL,CON)
+_INITIALIZER           00003328    00000039 =          57. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -319,17 +322,17 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSINIT                00002F6E    0000000C =          12. bytes (REL,CON)
+_GSINIT                00003361    0000000C =          12. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     00002F6E  gsinit   
+     00003361  gsinit   
 ASxxxx Linker V03.00/V05.40 + sdld,  page 25.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_GSFINAL               00002F7A    00000001 =           1. bytes (REL,CON)
+_GSFINAL               0000336D    00000001 =           1. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
@@ -338,26 +341,26 @@ Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_DATA                  0000C0A0    000002F0 =         752. bytes (REL,CON)
+_DATA                  0000C0A0    00000310 =         784. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
      0000C0A0  __cpu     |    0000C0A1  __is_GBA  |    0000C0A2  .mode    
      0000C0A3  .sys_time |    0000C0A3  _sys_time |    0000C0A5  .int_0x40
-     0000C0B1  _gStage   |    0000C219  _gPieces  |    0000C386  ___rand_s
-     0000C388  .int_0x48
+     0000C0D1  _gStage   |    0000C239  _gPieces  |    0000C3A6  ___rand_s
+     0000C3A8  .int_0x48
 ASxxxx Linker V03.00/V05.40 + sdld,  page 27.
 Hexadecimal  [32-Bits]
 
 Area                       Addr        Size        Decimal Bytes (Attributes)
 --------------------       ----        ----        ------- ----- ------------
-_INITIALIZED           0000C390    00000039 =          57. bytes (REL,CON)
+_INITIALIZED           0000C3B0    00000039 =          57. bytes (REL,CON)
 
         Value  Global            Value  Global            Value  Global    
         -----  ------            -----  ------            -----  ------    
-     0000C394  _gViewSta |    0000C395  _gCurrent |    0000C397  _gRandomC
-     0000C398  _gBgTileI |    0000C39A  _gPuzzleC |    0000C3C2  _gClearFl
-     0000C3C6  _gCurrent |    0000C3C8  __map_til
+     0000C3B4  _gViewSta |    0000C3B5  _gCurrent |    0000C3B7  _gRandomC
+     0000C3B8  _gBgTileI |    0000C3BA  _gPuzzleC |    0000C3E2  _gClearFl
+     0000C3E6  _gCurrent |    0000C3E8  __map_til
 ASxxxx Linker V03.00/V05.40 + sdld,  page 28.
 Hexadecimal  [32-Bits]
 
@@ -408,6 +411,7 @@ c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/crt0.o
                                           [ Runtime ]
 bin/Release/title_view.o                  [ title_view ]
 bin/Release/stage_select_view.o           [ stage_select_view ]
+bin/Release/sound.o                       [ sound ]
 bin/Release/puzzle_view.o                 [ puzzle_view ]
 bin/Release/puzzle_stage.o                [ puzzle_stage ]
 bin/Release/puzzle.o                      [ puzzle ]
