@@ -4,6 +4,7 @@
 #include "graphics/stage_select_tilemap.h"
 #include "graphics/hud_tileset.h"
 #include "graphics/hud_tilemap.h"
+#include "sound/sound.h"
 #include "puzzle/puzzle.h"
 #include "view.h"
 #include "util.h"
@@ -43,21 +44,27 @@ int updateStageSelectView(void) {
     unsigned char padInput = joypad();
     if (padInput & J_A || padInput & J_START) {
         waitpadup();
+        setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
         setPuzzleId(gCursorState);
         return VIEW_ID_PUZZLE;
     } else if (padInput & J_B) {
         waitpadup();
+        setSound(0, SOUND_TYPE_MENU_CANCEL, DEFAULT_SOUND_DURATION);
         return VIEW_ID_TITLE;
     } else if (padInput & J_UP) {
-        waitpadup();
         if (gCursorState > PUZZLE_ID_HI) {
+            waitpadup();
+            setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
             --gCursorState;
         }
     } else if (padInput & J_DOWN) {
-        waitpadup();
         if (isMoegiEnabled() && gCursorState < PUZZLE_ID_MOEGI) {
+            waitpadup();
+            setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
             ++gCursorState;
         } else if (gCursorState < PUZZLE_ID_NICE) {
+            waitpadup();
+            setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
             ++gCursorState;
         }
     }

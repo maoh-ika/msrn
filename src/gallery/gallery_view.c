@@ -4,6 +4,7 @@
 #include "gallery/gallery_view.h"
 #include "graphics/hud_tileset.h"
 #include "graphics/gallery_keyop_tilemap.h"
+#include "sound/sound.h"
 #include "view.h"
 #include "util.h"
 #include "puzzle/puzzle.h"
@@ -24,6 +25,11 @@ void initGalleryView(void) {
     HIDE_BKG;
 
     set_bkg_data(0, HUD_TILESET_TILE_COUNT, HUD_TILESET);
+    
+    // clear prev bkg 
+    unsigned char blank[360];
+    memset(blank, 0x29, 360);
+    set_bkg_tiles(0, 0, 20, 18, blank);
 
     gCurrentImg = PUZZLE_ID_HI;
     gIsUpdated = TRUE;
@@ -44,13 +50,13 @@ void initGalleryView(void) {
 int updateGalleryView(void) {
     unsigned char padInput = joypad();
 
-    if (padInput & J_A || padInput & J_START) {
+    if (padInput & J_B) {
         waitpadup();
-    } else if (padInput & J_B) {
-        waitpadup();
+        setSound(0, SOUND_TYPE_MENU_CANCEL, DEFAULT_SOUND_DURATION);
         return VIEW_ID_TITLE;
     } else if (padInput & J_LEFT) {
         waitpadup();
+        setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
         if (PUZZLE_ID_HI < gCurrentImg) {
             --gCurrentImg;
         } else {
@@ -59,6 +65,7 @@ int updateGalleryView(void) {
         gIsUpdated = TRUE;
     } else if (padInput & J_RIGHT) {
         waitpadup();
+        setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
         if (isMoegiEnabled() && gCurrentImg < PUZZLE_ID_MOEGI) {
             ++gCurrentImg;
         } else if (gCurrentImg < PUZZLE_ID_NICE) {

@@ -18,7 +18,7 @@ SET "COMPILE_OBJECT_FILES="
 
 :: loop for all files in the default source folder
 FOR /R "src/" %%X IN (*.c) DO (
-    echo Compiling %%~nX ...
+    echo Compiling %%X ...
     %LCC_COMPILE% bin/Debug/%%~nX.o %%X
     SET "COMPILE_OBJECT_FILES=bin/Debug/%%~nX.o !COMPILE_OBJECT_FILES!"
 )

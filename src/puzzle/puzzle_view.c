@@ -6,6 +6,7 @@
 #include "graphics/hud_tileset.h"
 #include "graphics/puzzle_keyop_tilemap.h"
 #include "graphics/stage_clear_tilemap.h"
+#include "sound/sound.h"
 #include "view.h"
 #include "util.h"
 #include "puzzle/puzzle.h"
@@ -48,6 +49,7 @@ int updatePuzzleView(void) {
         unsigned char padInput = joypad();
         if (padInput & J_A || padInput & J_START) {
             waitpadup();
+            setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
             gViewState = PUZZLE_VIEW_STATE_PREPARING;
         }
     } else if (gViewState == PUZZLE_VIEW_STATE_PREPARING) {
@@ -63,35 +65,41 @@ int updatePuzzleView(void) {
             showAnswer(FALSE);
         }
 
-        if (padInput & J_A || padInput & J_START) {
-            if (padInput & J_B) {
-                // both a and b are pressed
-                waitpadup();
-                gViewState = PUZZLE_VIEW_STATE_GIVEUP;
-            } else {
-                waitpadup();
-                moveSelectedPiece();
-                if (isCompleted()) {
-                    finalizeStage();
-                    remove_LCD(hideWindow);
-                    remove_VBL(showWindow);
-                    gViewState = PUZZLE_VIEW_STATE_CLEAR;
-                }
+        if (padInput & J_B && padInput & J_START) {
+            gViewState = PUZZLE_VIEW_STATE_GIVEUP;
+            setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
+        } else if (padInput & J_A || padInput & J_START) {
+            moveSelectedPiece();
+            if (isCompleted()) {
+                finalizeStage();
+                remove_LCD(hideWindow);
+                remove_VBL(showWindow);
+                gViewState = PUZZLE_VIEW_STATE_CLEAR;
             }
+            waitpadup();
+            setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
         } else if (padInput & J_B) {
             showAnswer(TRUE);
         } else if (padInput & J_UP) {
             waitpadup();
-            selectUpPiece();
+            if (selectUpPiece()) {
+                setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
+            }
         } else if (padInput & J_DOWN) {
             waitpadup();
-            selectDownPiece();
+            if (selectDownPiece()) {
+                setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
+            }
         } else if (padInput & J_LEFT) {
             waitpadup();
-            selectLeftPiece();
+            if (selectLeftPiece()) {
+                setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
+            }
         } else if (padInput & J_RIGHT) {
             waitpadup();
-            selectRightPiece();
+            if (selectRightPiece()) {
+                setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
+            }
         }
     } else if (gViewState == PUZZLE_VIEW_STATE_GIVEUP) {
         correctStage();
@@ -107,6 +115,7 @@ int updatePuzzleView(void) {
     } else if (gViewState == PUZZLE_VIEW_STATE_COMPLETED) {
         unsigned char padInput = joypad();
         if (padInput & J_A || padInput & J_START) {
+            setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
             return VIEW_ID_TITLE;
         }
     }

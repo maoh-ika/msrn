@@ -1,6 +1,7 @@
 #include <gb/gb.h>
 #include <string.h>
 #include <types.h>
+#include <time.h>
 
 #include "graphics/title_tileset.h"
 #include "graphics/title_tilemap.h"
@@ -8,6 +9,7 @@
 #include "graphics/stage_tilemap.h"
 #include "graphics/puzzle_hi_tileset.h"
 #include "graphics/puzzle_hi_tilemap.h"
+#include "sound/sound.h"
 #include "title/title_view.h"
 #include "stage_select/stage_select_view.h"
 #include "puzzle/puzzle_view.h"
@@ -25,6 +27,8 @@ void main( void ) {
     void (*finalizeViewFuncs[])(void) = { finalizeTitleView, finalizeStageSelectView, finalizePuzzleView, finalizeGalleryView };
     unsigned char currentViewIid = VIEW_ID_TITLE;
     unsigned char mainState = MAIN_STATE_VIEW_CHANGED;
+
+    initSound();
     
     BOOLEAN isRunning = TRUE;
 

@@ -7,6 +7,7 @@
 #include "graphics/puzzle_keyop_tilemap.h"
 #include "graphics/hud_tileset.h"
 #include "graphics/hud_tilemap.h"
+#include "sound/sound.h"
 #include "view.h"
 #include "util.h"
 
@@ -36,17 +37,24 @@ int updateTitleView(void) {
     unsigned char padInput = joypad();
     if (padInput & J_A || padInput & J_START) {
         waitpadup();
+        setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
         if (gCursorState == CURSOR_STATE_START) {
             return VIEW_ID_STAGE_SELECT;
         } else if (gCursorState == CURSOR_STATE_GALLERY) {
             return VIEW_ID_GALLERY;
         }
     } else if (padInput & J_UP) {
-        waitpadup();
-        gCursorState = CURSOR_STATE_START;
+        if (CURSOR_STATE_START < gCursorState) {
+            waitpadup();
+            setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
+            --gCursorState;
+        }
     } else if (padInput & J_DOWN) {
-        waitpadup();
-        gCursorState = CURSOR_STATE_GALLERY;
+        if (gCursorState < CURSOR_STATE_GALLERY) {
+            waitpadup();
+            setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
+            ++gCursorState;
+        }
     }
 
     return VIEW_ID_TITLE;
