@@ -60,15 +60,13 @@ int updateGalleryView(void) {
         if (PUZZLE_ID_HI < gCurrentImg) {
             --gCurrentImg;
         } else {
-            gCurrentImg = isMoegiEnabled() ? PUZZLE_ID_MOEGI : PUZZLE_ID_NICE;
+            gCurrentImg = PUZZLE_ID_MOEGI;
         }
         gIsUpdated = TRUE;
     } else if (padInput & J_RIGHT) {
         waitpadup();
         setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
-        if (isMoegiEnabled() && gCurrentImg < PUZZLE_ID_MOEGI) {
-            ++gCurrentImg;
-        } else if (gCurrentImg < PUZZLE_ID_NICE) {
+        if (gCurrentImg < PUZZLE_ID_MOEGI) {
             ++gCurrentImg;
         } else {
             gCurrentImg = PUZZLE_ID_HI;
@@ -114,8 +112,13 @@ void drawGalleryView(void) {
         memcpy(tileIndices, tiles, 20);
         isUnlocked = gClearFlags & (1 << PUZZLE_ID_NICE);
     } else if (gCurrentImg == PUZZLE_ID_MOEGI) {
-        unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x16, 0x00, 0x0E, 0x10, 0x12, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
-        memcpy(tileIndices, tiles, 20);
+        if (isMoegiEnabled()) {
+            unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x16, 0x00, 0x0E, 0x10, 0x12, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
+            memcpy(tileIndices, tiles, 20);
+        } else {
+            unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x2B, 0x2B, 0x2B, 0x2B, 0x2B, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
+            memcpy(tileIndices, tiles, 20);
+        }
         isUnlocked = gClearFlags & (1 << PUZZLE_ID_MOEGI);
     }
 

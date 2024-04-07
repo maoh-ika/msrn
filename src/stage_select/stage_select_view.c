@@ -1,5 +1,6 @@
 #include <gb/gb.h>
 #include <stdio.h>
+#include <string.h>
 #include "stage_select/stage_select_view.h"
 #include "graphics/stage_select_tilemap.h"
 #include "graphics/hud_tileset.h"
@@ -17,6 +18,16 @@
 static unsigned char gCursorState = PUZZLE_ID_HI;
 static BOOLEAN gCursorUpdated = FALSE;
 
+void copyMoegi(unsigned char* buf) {
+    unsigned char tiles[5] = { 0x16, 0x00, 0x0E, 0x10, 0x12 };
+    memcpy(buf, tiles, 5);
+}
+
+void copyHidden(unsigned char* buf) {
+    unsigned char tiles[5] = { 0x2B, 0x2B, 0x2B, 0x2B, 0x2B };
+    memcpy(buf, tiles, 5);
+}
+
 void initStageSelectView(void) {
     HIDE_BKG;
     HIDE_SPRITES;
@@ -24,11 +35,14 @@ void initStageSelectView(void) {
     set_bkg_data(0, HUD_TILESET_TILE_COUNT, HUD_TILESET);
     set_bkg_tiles(0, 0, STAGE_SELECT_TILEMAP_WIDTH, STAGE_SELECT_TILEMAP_HEIGHT, STAGE_SELECT_TILEMAP);
     
+    unsigned char moegiTiles[5];
     if (isMoegiEnabled()) {
-        unsigned char moegiTiles[5] = { 0x16, 0x00, 0x0E, 0x10, 0x12 };
-        for (int i = 0; i < 5; ++i) {
-            set_tile_xy(7 + i, 10, moegiTiles[i]);
-        }
+        copyMoegi(moegiTiles);
+    } else {
+        copyHidden(moegiTiles);
+    }
+    for (int i = 0; i < 5; ++i) {
+        set_tile_xy(7 + i, 10, moegiTiles[i]);
     }
      
     set_sprite_data(0, HUD_TILESET_TILE_COUNT, HUD_TILESET);
@@ -44,9 +58,13 @@ int updateStageSelectView(void) {
     unsigned char padInput = joypad();
     if (padInput & J_A || padInput & J_START) {
         waitpadup();
-        setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
-        setPuzzleId(gCursorState);
-        return VIEW_ID_PUZZLE;
+        if (gCursorState == PUZZLE_ID_MOEGI && !isMoegiEnabled()) {
+            setSound(0, SOUND_TYPE_MENU_CANCEL, DEFAULT_SOUND_DURATION);
+        } else {
+            setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
+            setPuzzleId(gCursorState);
+            return VIEW_ID_PUZZLE;
+        }
     } else if (padInput & J_B) {
         waitpadup();
         setSound(0, SOUND_TYPE_MENU_CANCEL, DEFAULT_SOUND_DURATION);
@@ -58,11 +76,7 @@ int updateStageSelectView(void) {
             --gCursorState;
         }
     } else if (padInput & J_DOWN) {
-        if (isMoegiEnabled() && gCursorState < PUZZLE_ID_MOEGI) {
-            waitpadup();
-            setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
-            ++gCursorState;
-        } else if (gCursorState < PUZZLE_ID_NICE) {
+        if (gCursorState < PUZZLE_ID_MOEGI) {
             waitpadup();
             setSound(0, SOUND_TYPE_MENU_MOVE, DEFAULT_SOUND_DURATION);
             ++gCursorState;
