@@ -10,7 +10,12 @@ GBましろんはゲームボーイの実行形式であるgbファイルとし�
 
 1. [GBましろんのgbファイル(msrn.gb)](https://github.com/maoh-ika/msrn/blob/main/dist/Release/msrn.gb)をPCに保存します。リンク先ページの右側にあるダウンロードアイコンをクリックしてください。![](resource/release/screenshoot/download.png)
 2. [ゲームボーイのエミュレーションソフト](https://www.mesen.ca/)をダウンロードします。Windowsなら「Windows(Dev Build)」と書いてある方です。リンク先はMesenというソフトですが、無印ゲームボーイに対応していればどれを使っても良いです。
-3. ダウンロードしたMesenを起動し、Fileメニューから1でダウンロードしたgbファイルを開けばゲームが開始します。
+3. ダウンロードしたMesenを起動し、下の図のとおり設定を変更します。（実行するゲームの機種をGameBoyに変更）
+* メニューのSettings→Game Boyを選択  
+![](resource/release/screenshoot/setting1.png)  
+* Modelを「Game Boy」に変更  
+![](resource/release/screenshoot/setting2.png)
+5. Fileメニューから1でダウンロードしたgbファイルを開けばゲームが開始します。
 
 ## あそびかた
 スライドパズルゲームをプレイできるパズルモードと、クリアしたパズルのイラストを見ることができるギャラリーモードがあります。
