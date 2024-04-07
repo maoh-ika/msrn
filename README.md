@@ -8,7 +8,7 @@ GBましろんは、VTuber[黒岡ましろ](https://twitter.com/kurokamashiro)�
 GBましろんはゲームボーイの実行形式であるgbファイルとして配布しています。プレイするにはゲームボーイのエミュレーションソフトが必要です。
 以下の手順でプレイ環境を構築できます。  
 
-1. [GBましろんのgbファイル](https://github.com/maoh-ika/msrn/blob/main/dist/Release/msrn.gb)をPCに保存します。リンク先ページの右側にあるダウンロードアイコンをクリックしてください。
+1. [GBましろんのgbファイル(msrn.gb)](https://github.com/maoh-ika/msrn/blob/main/dist/Release/msrn.gb)をPCに保存します。リンク先ページの右側にあるダウンロードアイコンをクリックしてください。
 2. [ゲームボーイのエミュレーションソフト](https://www.mesen.ca/)をダウンロードします。リンク先はMesenというソフトですが、無印ゲームボーイに対応していればどれを使っても良いです。
 3. ダウンロードしたMesenを起動し、Fileメニューから1でダウンロードしたgbファイルを開けばゲームが開始します。
 
