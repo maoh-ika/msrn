@@ -21,7 +21,7 @@ GBましろんはゲームボーイの実行形式であるgbファイルとし�
 
 ### 基本ルール
 パズルモードはスライド式絵合わせゲームです。1つのイラストを横4マス縦7マスのピースに分割し、ランダムにシャッフルした状態で始まります。
-パズルには1つだけ空いたマスがあり、そこにピースを移動せていくことで元のイラストを復元できればクリアになります。
+パズルには1つだけ空いたマスがあり、そこにピースを移動させていくことで元のイラストを復元できればクリアになります。
 
 <div style="display: flex; justify-content: center;">
   <img src="resource/release/screenshoot/grid.png" style="width: 315px; height: 300px; margin-right: 10px;">
