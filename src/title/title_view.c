@@ -23,11 +23,20 @@ void initTitleView(void) {
     SWITCH_ROM(BANK(TITLE_TILESET));
     set_bkg_data(0, TITLE_TILESET_TILE_COUNT, TITLE_TILESET);
     set_bkg_tiles(0, 0, TITLE_TILEMAP_WIDTH, TITLE_TILEMAP_HEIGHT, TITLE_TILEMAP);
-    
+
+    // cursor    
     set_sprite_data(0, HUD_TILESET_TILE_COUNT, HUD_TILESET);
     set_sprite_tile(0, 0x26);
     gCursorState = CURSOR_STATE_START;
     gCursorUpdated = TRUE;
+
+    // version
+    const unsigned char version[6] = {0x1E, 0x01, 0x2C, 0x01, 0x2C, 0x00};
+    const int baseX = 120;
+    for (int i = 0; i < 6; ++i) {
+        set_sprite_tile(i + 1, version[i]);
+        move_sprite(i + 1, baseX + 8 * i, 151);
+    }
 
     SHOW_BKG; 
     SHOW_SPRITES;

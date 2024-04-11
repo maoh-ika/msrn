@@ -10,6 +10,7 @@
 StageObject gStage[STAGE_WIDTH * STAGE_HEIGHT];
 int gCurrentPitIdx = -1;
 unsigned char gRandomCount = 0;
+int gRandomPrevPiece = -1;
 unsigned int gBgTileIdxOffset = 0;
 
 #define TILE_INDEX_WALL 0
@@ -23,18 +24,32 @@ unsigned char getObjectIdx(const unsigned char x, const unsigned char y) {
 
 void random(void) {
     BOOLEAN (*funcs[])(void) = {selectUpPiece, selectDownPiece, selectLeftPiece, selectRightPiece};
+    BOOLEAN (*selector)(void) = NULL;
     for (int i = 3; i > 0; --i) {
-        const int j = rand() % (i + 1);
-        BOOLEAN (*temp)(void) = funcs[i];
-        funcs[i] = funcs[j];
-        funcs[j] = temp;
+        const int js = rand() % (i + 1);
+        selector = funcs[i];
+        funcs[i] = funcs[js];
+        funcs[js] = selector;
     }
 
+    selector = NULL;
     for (int i = 0; i < 4; ++i) {
         if ((*funcs[i])()) {
-            moveSelectedPiece();
-            break;
+            selector = funcs[i];
+            Piece* selected = getSelectedPiece();
+            const int pieceIndex = selected->pieceX + selected->pieceY * PUZZLE_WIDTH;
+            if (gRandomPrevPiece == -1 || gRandomPrevPiece != pieceIndex) {
+                moveSelectedPiece();
+                gRandomPrevPiece = pieceIndex;
+                return;
+            }
         }
+    }
+
+    // current piece is the only one selectable
+    if (selector) {
+        selector();
+        moveSelectedPiece();
     }
 }
 
@@ -77,6 +92,7 @@ void initStage(const int bgTileIdxOffset) {
     initPuzzle(STAGE_TILESET_TILE_COUNT + bgTileIdxOffset, 0, 0, pieceStartX, pieceStartY, TRUE);
     selectDownPiece();
     gRandomCount = 0;
+    gRandomPrevPiece = -1;
     gBgTileIdxOffset = bgTileIdxOffset;
     initrand(time(NULL));
 }
