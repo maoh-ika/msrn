@@ -42,7 +42,8 @@
         "puzzle_mashi_tilemap.h": "c",
         "platform.h": "c",
         "puzzle_hi_tileset.h": "c",
-        "puzzle_mashi_tileset.h": "c"
+        "puzzle_mashi_tileset.h": "c",
+        "puzzle_cold_tileset.h": "c"
     },
     "cmake.configureOnOpen": false
 }

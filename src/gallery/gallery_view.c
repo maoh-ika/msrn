@@ -9,12 +9,6 @@
 #include "util.h"
 #include "puzzle/puzzle.h"
 
-#define GARRALERY_IMG_HI 0
-#define GARRALERY_IMG_MASHI 1
-#define GARRALERY_IMG_IIKOCHAN 2
-#define GARRALERY_IMG_NICE 3
-#define GARRALERY_IMG_MOEGI 4
-
 static unsigned char gCurrentImg = PUZZLE_ID_HI;
 static BOOLEAN gIsUpdated;
             
@@ -60,13 +54,13 @@ int updateGalleryView(void) {
         if (PUZZLE_ID_HI < gCurrentImg) {
             --gCurrentImg;
         } else {
-            gCurrentImg = PUZZLE_ID_MOEGI;
+            gCurrentImg = PUZZLE_ID_LAST;
         }
         gIsUpdated = TRUE;
     } else if (padInput & J_RIGHT) {
         waitpadup();
         setSound(0, SOUND_TYPE_MENU_SELECT, DEFAULT_SOUND_DURATION);
-        if (gCurrentImg < PUZZLE_ID_MOEGI) {
+        if (gCurrentImg < PUZZLE_ID_LAST) {
             ++gCurrentImg;
         } else {
             gCurrentImg = PUZZLE_ID_HI;
@@ -112,14 +106,21 @@ void drawGalleryView(void) {
         memcpy(tileIndices, tiles, 20);
         isUnlocked = gClearFlags & (1 << PUZZLE_ID_NICE);
     } else if (gCurrentImg == PUZZLE_ID_MOEGI) {
-        if (isMoegiEnabled()) {
-            unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x16, 0x00, 0x0E, 0x10, 0x12, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
-            memcpy(tileIndices, tiles, 20);
-        } else {
-            unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x2B, 0x2B, 0x2B, 0x2B, 0x2B, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
-            memcpy(tileIndices, tiles, 20);
-        }
+        unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x16, 0x00, 0x0E, 0x10, 0x12, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
+        memcpy(tileIndices, tiles, 20);
         isUnlocked = gClearFlags & (1 << PUZZLE_ID_MOEGI);
+    } else if (gCurrentImg == PUZZLE_ID_PUIPUI) {
+        unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x18, 0x1D, 0x12, 0x18, 0x1D, 0x12, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
+        memcpy(tileIndices, tiles, 20);
+        isUnlocked = gClearFlags & (1 << PUZZLE_ID_PUIPUI);
+    } else if (gCurrentImg == PUZZLE_ID_KYURUN) {
+        unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x14, 0x21, 0x1D, 0x1A, 0x1D, 0x17, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29};
+        memcpy(tileIndices, tiles, 20);
+        isUnlocked = gClearFlags & (1 << PUZZLE_ID_KYURUN);
+    } else if (gCurrentImg == PUZZLE_ID_NYAN) {
+        unsigned char tiles[20] = { 0x29, 0x29, 0x29, 0x29, 0x29, 0x29, 0x27, 0x29, 0x17, 0x21, 0x0A, 0x17, 0x29, 0x26, 0x29, 0x29, 0x29, 0x29, 0x29, 0x29};
+        memcpy(tileIndices, tiles, 20);
+        isUnlocked = gClearFlags & (1 << PUZZLE_ID_NYAN);
     }
 
     set_win_tiles(0, 0, 20, 1, tileIndices);

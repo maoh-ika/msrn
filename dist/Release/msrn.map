@@ -407,7 +407,7 @@ _HEADER_LCD0           00000000    00000003 =           3. bytes (ABS,CON)
 
 Files Linked                              [ module(s) ]
 
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/crt0.o
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/crt0.o
                                           [ Runtime ]
 bin/Release/title_view.o                  [ title_view ]
 bin/Release/stage_select_view.o           [ stage_select_view ]
@@ -446,35 +446,35 @@ bin/Release/msrn.o                        [ msrn ]
 
 Libraries Linked                          [ object file ]
 
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
                                           [ rand.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ sfr.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
                                           [ time.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ set_wi_t.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ set_data.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ set_tile.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ lcd.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ pad.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
                                           [ __sdcc_call_hl.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
                                           [ _memset.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
                                           [ memcpy.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ clock.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/sm83/sm83.lib
                                           [ div.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ set_bk_t.o ]
-c:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
+C:\work\retro-game-tcg\gbdk-win64\gbdk\lib/gb/gb.lib
                                           [ set_xy_t.o ]
 
 ASxxxx Linker V03.00/V05.40 + sdld,  page 33.

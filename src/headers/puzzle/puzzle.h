@@ -17,6 +17,10 @@
 #define PUZZLE_ID_IIKOCHAN 2
 #define PUZZLE_ID_NICE 3
 #define PUZZLE_ID_MOEGI 4
+#define PUZZLE_ID_PUIPUI 5
+#define PUZZLE_ID_KYURUN 6
+#define PUZZLE_ID_NYAN 7
+#define PUZZLE_ID_LAST PUZZLE_ID_NYAN
 
 extern unsigned long gClearFlags;
 

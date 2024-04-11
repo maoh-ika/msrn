@@ -12,6 +12,12 @@
 #include "graphics/puzzle_nice_tilemap.h"
 #include "graphics/puzzle_moegi_tileset.h"
 #include "graphics/puzzle_moegi_tilemap.h"
+#include "graphics/puzzle_puipui_tileset.h"
+#include "graphics/puzzle_puipui_tilemap.h"
+#include "graphics/puzzle_kyurun_tileset.h"
+#include "graphics/puzzle_kyurun_tilemap.h"
+#include "graphics/puzzle_nyan_tileset.h"
+#include "graphics/puzzle_nyan_tilemap.h"
 #include "graphics/puzzle_border_tileset.h"
 #include "graphics/puzzle_border_tilemap.h"
 #include "graphics/puzzle_stripes_tileset.h"
@@ -75,6 +81,21 @@ void getPuzzleTileData(
         *tileset = PUZZLE_MOEGI_TILESET;
         *tilesetCount = PUZZLE_MOEGI_TILESET_TILE_COUNT;
         *tilemap = PUZZLE_MOEGI_TILEMAP;
+    } else if (gCurrentPuzzleId == PUZZLE_ID_PUIPUI) {
+        SWITCH_ROM(BANK(PUZZLE_PUIPUI_TILESET));
+        *tileset = PUZZLE_PUIPUI_TILESET;
+        *tilesetCount = PUZZLE_PUIPUI_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_PUIPUI_TILEMAP;
+    } else if (gCurrentPuzzleId == PUZZLE_ID_KYURUN) {
+        SWITCH_ROM(BANK(PUZZLE_KYURUN_TILESET));
+        *tileset = PUZZLE_KYURUN_TILESET;
+        *tilesetCount = PUZZLE_KYURUN_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_KYURUN_TILEMAP;
+    } else if (gCurrentPuzzleId == PUZZLE_ID_NYAN) {
+        SWITCH_ROM(BANK(PUZZLE_NYAN_TILESET));
+        *tileset = PUZZLE_NYAN_TILESET;
+        *tilesetCount = PUZZLE_NYAN_TILESET_TILE_COUNT;
+        *tilemap = PUZZLE_NYAN_TILEMAP;
     }
 }
 
