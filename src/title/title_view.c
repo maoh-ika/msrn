@@ -79,5 +79,7 @@ void drawTitleView(void) {
 }
 
 void finalizeTitleView(void) {
-    hide_sprite(0);
+    for (int i = 0; i < 7; ++i) {
+        hide_sprite(i);
+    }
 }
